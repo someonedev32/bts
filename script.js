@@ -1,97 +1,56 @@
-const contractAddress = "5qfL4XnPSGGJSx4n7MVvj5kCtkuwsqBUxgBCALxgwpty";
+const contractAddress = "5qfL4XnPSGGJSx4n7MVvj5kCtkuwsqBUxgBCALxgwpty"; // Bitcoin Silver Contract
+const sellerWallet = "Your_Solana_Wallet_Address"; // Replace with your wallet address to receive payments
+const tokenPrice = 0.01; // Price of one Bitcoin Silver token in SOL
 
-// Check if Phantom Wallet is available
-const isPhantomInstalled = window.solana && window.solana.isPhantom;
-
-if (!isPhantomInstalled) {
-    document.getElementById("wallet-address").textContent = 
-        "Phantom Wallet is not detected. Please install it from https://phantom.app.";
-} else {
-    console.log("Phantom Wallet detected.");
+// Check if Phantom Wallet is installed
+if (!window.solana || !window.solana.isPhantom) {
+    alert("Phantom Wallet is not installed. Please install it from https://phantom.app.");
 }
 
-// Handle wallet connection
-document.getElementById("connect-wallet").addEventListener("click", async () => {
-    if (isPhantomInstalled) {
-        try {
-            const response = await window.solana.connect({ onlyIfTrusted: false }); // Open Phantom Wallet popup
-            const walletAddress = response.publicKey.toString(); // Get connected wallet address
-            document.getElementById("wallet-address").textContent = `Wallet Connected: ${walletAddress}`;
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-            alert("Wallet connection failed. Please try again.");
-        }
-    } else {
-        // For mobile users, show Phantom Wallet download link
-        const mobileDeepLink = "https://phantom.app/ul/";
-        const message = `
-            Please open this page in the Phantom Wallet browser. 
-            Or, download Phantom Wallet from: ${mobileDeepLink}
-        `;
-        alert(message);
-    }
-});
-
-// Placeholder for token purchase
-document.getElementById("buy-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const amount = document.getElementById("amount").value;
-    document.getElementById("status").textContent = `You are buying ${amount} Bitcoin Silver tokens...`;
-
-    // Add blockchain transaction logic here
-    alert("Token purchase functionality is under development.");
-});
-
-const contractAddress = "5qfL4XnPSGGJSx4n7MVvj5kCtkuwsqBUxgBCALxgwpty";
-
+// Connect Phantom Wallet
 document.getElementById("connect-wallet").addEventListener("click", async () => {
     try {
         const response = await window.solana.connect();
         const walletAddress = response.publicKey.toString();
         document.getElementById("wallet-address").textContent = `Wallet Connected: ${walletAddress}`;
-    } catch (err) {
-        console.error("Wallet connection failed:", err);
+    } catch (error) {
+        console.error("Wallet connection failed:", error);
+        alert("Failed to connect wallet. Please try again.");
     }
 });
 
+// Purchase Tokens
 document.getElementById("buy-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const amount = document.getElementById("amount").value;
-    document.getElementById("status").textContent = `You are buying ${amount} Bitcoin Silver tokens...`;
-    // Add logic to handle token purchase via Solana blockchain
-});
+    const amount = parseFloat(document.getElementById("amount").value); // Amount of tokens to buy
+    const totalCost = amount * tokenPrice;
 
-const contractAddress = "5qfL4XnPSGGJSx4n7MVvj5kCtkuwsqBUxgBCALxgwpty";
-
-// Ensure Phantom Wallet is available
-const isPhantomInstalled = window.solana && window.solana.isPhantom;
-
-if (!isPhantomInstalled) {
-    alert("Phantom Wallet is not installed. Please install it to proceed.");
-} else {
-    console.log("Phantom Wallet is detected.");
-}
-
-// Wallet connection logic
-document.getElementById("connect-wallet").addEventListener("click", async () => {
-    if (isPhantomInstalled) {
-        try {
-            const response = await window.solana.connect(); // Prompts the user to connect their wallet
-            const walletAddress = response.publicKey.toString(); // Get the wallet address
-            document.getElementById("wallet-address").textContent = `Wallet Connected: ${walletAddress}`;
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-            alert("Wallet connection failed. Please try again.");
-        }
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid token amount.");
+        return;
     }
-});
 
-// Placeholder for token purchase logic
-document.getElementById("buy-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const amount = document.getElementById("amount").value;
-    document.getElementById("status").textContent = `You are buying ${amount} Bitcoin Silver tokens...`;
+    try {
+        // Connect to Solana blockchain
+        const provider = window.solana;
+        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"), "confirmed");
 
-    // Add blockchain transaction logic here (e.g., transferring SOL for tokens)
-    alert("Token purchase functionality is under development.");
+        // Create the transaction
+        const transaction = new solanaWeb3.Transaction().add(
+            solanaWeb3.SystemProgram.transfer({
+                fromPubkey: provider.publicKey,
+                toPubkey: sellerWallet,
+                lamports: solanaWeb3.LAMPORTS_PER_SOL * totalCost, // Convert SOL to lamports
+            })
+        );
+
+        // Sign the transaction with the user's wallet
+        const { signature } = await provider.signAndSendTransaction(transaction);
+        await connection.confirmTransaction(signature, "confirmed");
+
+        document.getElementById("status").textContent = `Transaction successful! View it on Solana Explorer: https://explorer.solana.com/tx/${signature}`;
+    } catch (error) {
+        console.error("Transaction failed:", error);
+        alert("Failed to complete the transaction. Please try again.");
+    }
 });
