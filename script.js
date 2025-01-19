@@ -1,5 +1,5 @@
 const contractAddress = "5qfL4XnPSGGJSx4n7MVvj5kCtkuwsqBUxgBCALxgwpty"; // Bitcoin Silver Contract
-const sellerWallet = "Your_Solana_Wallet_Address"; // Replace with your wallet address to receive payments
+const sellerWallet = "7AZE5vh9jo1B6CRG3Yq7vAyfeS2ygKWAVsXL1rec15jh"; // Replace with your wallet address to receive payments
 const tokenPrice = 0.01; // Price of one Bitcoin Silver token in SOL
 
 // Check if Phantom Wallet is installed
