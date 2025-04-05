@@ -4,136 +4,243 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>iOS Wallet App</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
-      background-color: #f8f9fa;
+      margin: 0;
+      background: #0d1117;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    .navbar-ios {
+    .container, .login-container {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 25px 20px;
+      width: 92%;
+      max-width: 500px;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    .login-input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #1e2328;
+      color: #fff;
+    }
+    .login-button {
+      width: 100%;
+      padding: 14px;
+      background: #1f6feb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 17px;
+    }
+    .logout-btn {
+      margin-top: 20px;
+      background: #f44336;
+      padding: 10px;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      width: 100%;
+    }
+    .hidden { display: none; }
+
+    .footer {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background-color: #fff;
-      border-top: 1px solid #ddd;
+      background: #161b22;
       display: flex;
       justify-content: space-around;
+      border-top: 1px solid #30363d;
+      z-index: 10;
       padding: 10px 0;
-      z-index: 1000;
     }
-    .navbar-ios a {
-      color: #333;
-      text-decoration: none;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
+    .footer-btn {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      flex: 1;
+    }
+    .footer-btn i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
       align-items: center;
+      justify-content: center;
+      z-index: 999;
     }
-    .navbar-ios i {
-      font-size: 18px;
-      margin-bottom: 3px;
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background-color: #fff;
-      border-bottom: 1px solid #ddd;
-    }
-    .chart-container {
-      max-width: 100%;
+
+    .modal-content {
+      background: #161b22;
       padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .balance {
+      font-size: 22px;
+      color: #39ff14;
+      margin-top: 10px;
+    }
+
+    .wallet-info {
+      font-size: 12px;
+      word-break: break-word;
+      margin-top: 10px;
+    }
+
+    iframe {
+      border-radius: 10px;
+      width: 100%;
+      height: 400px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-<!-- Top Bar -->
-<div class="topbar">
-  <h5 class="mb-0">My Wallet</h5>
-  <a href="#" class="btn btn-sm btn-outline-danger">Logout</a>
+<div class="login-container" id="loginForm">
+  <h2>Login</h2>
+  <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
+  <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
+  <button class="login-button" onclick="login()">Login</button>
+  <p style="color:red;" id="loginError"></p>
+  <p style="text-align:center; font-size:14px;" onclick="toggleForm('register')">Don't have an account? Register</p>
 </div>
 
-<!-- Main Wallet Info -->
-<div class="container mt-4 text-center">
-  <h2>$5,000,000.00</h2>
-  <p class="text-muted">RichToken (RICH)</p>
-
-  <button class="btn btn-success btn-block mb-2" data-bs-toggle="modal" data-bs-target="#depositModal"><i class="fas fa-download me-1"></i> Deposit</button>
-  <button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#withdrawModal"><i class="fas fa-upload me-1"></i> Withdraw</button>
+<div class="login-container hidden" id="registerForm">
+  <h2>Register</h2>
+  <input type="email" id="registerEmail" class="login-input" placeholder="Email" />
+  <input type="password" id="registerPassword" class="login-input" placeholder="Password" />
+  <button class="login-button" onclick="register()">Register</button>
+  <p style="color:red;" id="registerError"></p>
+  <p style="text-align:center; font-size:14px;" onclick="toggleForm('login')">Already have an account? Login</p>
 </div>
 
-<!-- Chart -->
-<div class="chart-container">
-  <canvas id="walletChart"></canvas>
+<div class="container hidden" id="dashboard">
+  <h2>Wallet Dashboard</h2>
+  <div class="wallet-info" id="walletAddress">Not connected</div>
+  <div class="balance">Balance: $1,000,000.00</div>
+  <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
+  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
-<!-- iOS-style Bottom Navbar -->
-<div class="navbar-ios">
-  <a href="#"><i class="fas fa-home"></i>Home</a>
-  <a href="#"><i class="fas fa-chart-line"></i>Stats</a>
-  <a href="#"><i class="fas fa-cog"></i>Settings</a>
+<div class="footer hidden" id="footerNav">
+  <div class="footer-btn" onclick="openModal('depositModal')">
+    <i class="fas fa-arrow-down"></i>Deposit
+  </div>
+  <div class="footer-btn" onclick="openModal('withdrawModal')">
+    <i class="fas fa-arrow-up"></i>Withdraw
+  </div>
+  <div class="footer-btn" onclick="alert('Transactions Coming Soon')">
+    <i class="fas fa-list-alt"></i>Transactions
+  </div>
+  <div class="footer-btn" onclick="alert('Settings Coming Soon')">
+    <i class="fas fa-cog"></i>Settings
+  </div>
 </div>
 
 <!-- Deposit Modal -->
-<div class="modal fade" id="depositModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Deposit Funds</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="number" class="form-control mb-3" placeholder="Amount">
-        <button class="btn btn-success w-100">Confirm Deposit</button>
-      </div>
-    </div>
+<div class="modal" id="depositModal">
+  <div class="modal-content">
+    <h3>Deposit</h3>
+    <input type="number" class="login-input" placeholder="Amount" />
+    <button class="login-button">Confirm</button>
+    <button class="logout-btn" onclick="closeModal('depositModal')">Close</button>
   </div>
 </div>
 
 <!-- Withdraw Modal -->
-<div class="modal fade" id="withdrawModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Withdraw Funds</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="number" class="form-control mb-3" placeholder="Amount">
-        <button class="btn btn-danger w-100">Confirm Withdrawal</button>
-      </div>
-    </div>
+<div class="modal" id="withdrawModal">
+  <div class="modal-content">
+    <h3>Withdraw</h3>
+    <input type="number" class="login-input" placeholder="Amount" />
+    <button class="login-button">Confirm</button>
+    <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
   </div>
 </div>
 
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const ctx = document.getElementById('walletChart');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-      datasets: [{
-        label: 'Value',
-        data: [3200000, 4000000, 4700000, 5000000],
-        borderColor: '#0d6efd',
-        backgroundColor: 'rgba(13, 110, 253, 0.1)',
-        tension: 0.4,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: false }
-      }
+  const fakeDB = {
+    "demo@wallet.com": "pass123"
+  };
+
+  function toggleForm(type) {
+    document.getElementById('loginForm').classList.toggle('hidden', type === 'register');
+    document.getElementById('registerForm').classList.toggle('hidden', type === 'login');
+  }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if (fakeDB[email] === password) {
+      showDashboard();
+    } else {
+      document.getElementById('loginError').innerText = "Invalid credentials.";
     }
-  });
+  }
+
+  function register() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    if (fakeDB[email]) {
+      document.getElementById('registerError').innerText = "User already exists.";
+    } else {
+      fakeDB[email] = password;
+      alert("Registered! You can now login.");
+      toggleForm('login');
+    }
+  }
+
+  function showDashboard() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('footerNav').classList.remove('hidden');
+  }
+
+  function logout() {
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('footerNav').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+  }
+
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  async function connectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+      try {
+        const resp = await window.solana.connect();
+        document.getElementById("walletAddress").innerText = "Connected: " + resp.publicKey.toString();
+      } catch (err) {
+        alert("Connection rejected.");
+      }
+    } else {
+      alert("Phantom Wallet not installed.");
+    }
+  }
 </script>
 
 </body>
