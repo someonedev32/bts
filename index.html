@@ -1,4 +1,134 @@
-<div class="footer-btn"><i class="fas fa-cog"></i>Settings</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Basic Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    #authSection {
+      display: block;
+    }
+
+    #dashboard {
+      display: none;
+    }
+
+    /* Footer Styles */
+    #appFooter {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    .footer-btn {
+      padding: 10px;
+      display: inline-block;
+      color: #fff;
+    }
+
+    .footer-btn i {
+      margin-right: 5px;
+    }
+
+    /* Light/Dark Mode */
+    .light-mode {
+      background-color: #fff;
+      color: #000;
+    }
+
+    /* QR Scanner */
+    #qrScanner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #qr-reader {
+      width: 300px;
+      height: 300px;
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Authentication Section -->
+<div id="authSection">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- Dashboard Section -->
+<div id="dashboard">
+  <h1>Wallet Dashboard</h1>
+  <div>
+    <p><strong>Wallet Address:</strong> <span id="walletAddress">0xABCDEF1234567890</span></p>
+    <p id="walletBalance">Balance: $0.00</p>
+    <button onclick="startScanner()">Scan QR Code</button>
+    <button onclick="toggleTheme()">Toggle Dark/Light Mode</button>
+  </div>
+
+  <div class="footer-btn">
+    <i class="fas fa-dollar-sign"></i> USDT
+  </div>
+  <div class="footer-btn" onclick="openDepositPopup()">Deposit</div>
+  <div class="footer-btn" onclick="openWithdrawPopup()">Withdraw</div>
+  <div class="footer-btn"><i class="fas fa-cog"></i>Settings</div>
+</div>
+
+<!-- QR Scanner Popup -->
+<div id="qrScanner">
+  <div id="qr-reader"></div>
+  <button onclick="closeScanner()">Close</button>
+</div>
+
+<!-- Deposit Popup -->
+<div id="depositPopup" style="display: none;">
+  <h3>Deposit USDT</h3>
+  <p>Address: <span id="depositAddress">0xDepositAddress123</span></p>
+  <button onclick="closeDepositPopup()">Close</button>
+</div>
+
+<!-- Withdraw Popup -->
+<div id="withdrawPopup" style="display: none;">
+  <h3>Withdraw USDT</h3>
+  <input type="text" id="withdrawAddress" placeholder="Enter withdraw address" />
+  <button onclick="closeWithdrawPopup()">Close</button>
+</div>
+
+<!-- Footer Section -->
+<div id="appFooter">
+  <div class="footer-btn"><i class="fas fa-home"></i> Home</div>
+  <div class="footer-btn"><i class="fas fa-wallet"></i> Wallet</div>
+  <div class="footer-btn"><i class="fas fa-cogs"></i> Settings</div>
 </div>
 
 <!-- Scripts -->
@@ -20,7 +150,7 @@
   async function updateBalance() {
     currentBTCPrice = await fetchBitcoinPrice();  // Fetch the latest Bitcoin price
     const balanceInUSD = userBTC * currentBTCPrice;  // Calculate the user's balance
-    document.getElementById("walletBalance").innerText = Balance: $${balanceInUSD.toFixed(2)};  // Update displayed balance
+    document.getElementById("walletBalance").innerText = `Balance: $${balanceInUSD.toFixed(2)}`;  // Update displayed balance
   }
 
   // Login function
@@ -59,7 +189,7 @@
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
       (decodedText) => {
-        document.getElementById("walletAddress").innerText = Scanned: ${decodedText};
+        document.getElementById("walletAddress").innerText = `Scanned: ${decodedText}`;
         qrReader.stop();
         document.getElementById("qrScanner").style.display = "none";
       }
@@ -69,6 +199,26 @@
   // Close QR scanner
   function closeScanner() {
     document.getElementById("qrScanner").style.display = "none";
+  }
+
+  // Open deposit popup
+  function openDepositPopup() {
+    document.getElementById("depositPopup").style.display = "block";
+  }
+
+  // Close deposit popup
+  function closeDepositPopup() {
+    document.getElementById("depositPopup").style.display = "none";
+  }
+
+  // Open withdraw popup
+  function openWithdrawPopup() {
+    document.getElementById("withdrawPopup").style.display = "block";
+  }
+
+  // Close withdraw popup
+  function closeWithdrawPopup() {
+    document.getElementById("withdrawPopup").style.display = "none";
   }
 </script>
 
