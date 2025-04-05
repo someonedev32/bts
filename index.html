@@ -1,54 +1,79 @@
-The My Wallet Dashboard is a crypto-style interface showing wallet balance, token details, and wallet connection status. To enhance it as you requested, here’s a full HTML code mockup including:
-	1.	Navbar with icons (app-like)
-	2.	Professional chart placeholders
-	3.	Deposit/Withdraw buttons with pop-up modals
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wallet Dashboard</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <title>iOS Wallet App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .navbar-ios {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 1000;
+    }
+    .navbar-ios a {
+      color: #333;
+      text-decoration: none;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .navbar-ios i {
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+    .chart-container {
+      max-width: 100%;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Navbar with icons -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#"><i class="fas fa-wallet"></i> MyWallet</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-home"></i> Dashboard</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Charts</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<!-- Top Bar -->
+<div class="topbar">
+  <h5 class="mb-0">My Wallet</h5>
+  <a href="#" class="btn btn-sm btn-outline-danger">Logout</a>
+</div>
 
-<!-- Dashboard -->
-<div class="container mt-5 text-center">
-  <h1>Wallet Dashboard</h1>
-  <p>Balance: <strong>$5,000,000.00 USD</strong></p>
-  <p>Token: <strong>RichToken (RICH)</strong></p>
+<!-- Main Wallet Info -->
+<div class="container mt-4 text-center">
+  <h2>$5,000,000.00</h2>
+  <p class="text-muted">RichToken (RICH)</p>
 
-  <!-- Action buttons -->
-  <button class="btn btn-success m-2" data-toggle="modal" data-target="#depositModal"><i class="fas fa-download"></i> Deposit</button>
-  <button class="btn btn-danger m-2" data-toggle="modal" data-target="#withdrawModal"><i class="fas fa-upload"></i> Withdraw</button>
+  <button class="btn btn-success btn-block mb-2" data-bs-toggle="modal" data-bs-target="#depositModal"><i class="fas fa-download me-1"></i> Deposit</button>
+  <button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#withdrawModal"><i class="fas fa-upload me-1"></i> Withdraw</button>
+</div>
 
-  <!-- Chart placeholder -->
-  <div class="mt-5">
-    <canvas id="walletChart" width="600" height="300"></canvas>
-  </div>
+<!-- Chart -->
+<div class="chart-container">
+  <canvas id="walletChart"></canvas>
+</div>
+
+<!-- iOS-style Bottom Navbar -->
+<div class="navbar-ios">
+  <a href="#"><i class="fas fa-home"></i>Home</a>
+  <a href="#"><i class="fas fa-chart-line"></i>Stats</a>
+  <a href="#"><i class="fas fa-cog"></i>Settings</a>
 </div>
 
 <!-- Deposit Modal -->
@@ -57,13 +82,11 @@ The My Wallet Dashboard is a crypto-style interface showing wallet balance, toke
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Deposit Funds</h5>
-        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form>
-          <input type="number" class="form-control mb-3" placeholder="Enter deposit amount" required>
-          <button type="submit" class="btn btn-success btn-block">Confirm Deposit</button>
-        </form>
+        <input type="number" class="form-control mb-3" placeholder="Amount">
+        <button class="btn btn-success w-100">Confirm Deposit</button>
       </div>
     </div>
   </div>
@@ -75,44 +98,39 @@ The My Wallet Dashboard is a crypto-style interface showing wallet balance, toke
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Withdraw Funds</h5>
-        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form>
-          <input type="number" class="form-control mb-3" placeholder="Enter withdraw amount" required>
-          <button type="submit" class="btn btn-danger btn-block">Confirm Withdrawal</button>
-        </form>
+        <input type="number" class="form-control mb-3" placeholder="Amount">
+        <button class="btn btn-danger w-100">Confirm Withdrawal</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-  const ctx = document.getElementById('walletChart').getContext('2d');
+  const ctx = document.getElementById('walletChart');
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: ['Jan', 'Feb', 'Mar', 'Apr'],
       datasets: [{
-        label: 'Portfolio Value',
-        data: [3000000, 3500000, 4500000, 5000000],
-        borderColor: '#28a745',
-        backgroundColor: 'rgba(40, 167, 69, 0.2)',
-        fill: true,
-        tension: 0.4
+        label: 'Value',
+        data: [3200000, 4000000, 4700000, 5000000],
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+        tension: 0.4,
+        fill: true
       }]
     },
     options: {
       responsive: true,
+      plugins: { legend: { display: false } },
       scales: {
-        y: {
-          beginAtZero: false
-        }
+        y: { beginAtZero: false }
       }
     }
   });
@@ -120,5 +138,3 @@ The My Wallet Dashboard is a crypto-style interface showing wallet balance, toke
 
 </body>
 </html>
-
-You can copy and adapt this into your existing project, or I can help merge it directly into your existing codebase if you upload the original HTML/CSS/JS files. Want me to do that?
