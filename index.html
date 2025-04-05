@@ -1,16 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Mania</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; background: black; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Wallet Dashboard</title>
+  <style>
+    body {
+      background: #0d1117;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+    }
+    .container {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      max-width: 400px;
+      text-align: center;
+    }
+    button {
+      background: #1f6feb;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .wallet-info {
+      margin-top: 20px;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .balance {
+      margin-top: 20px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #39ff14;
+    }
+  </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
+  <div class="container">
+    <h2>Wallet Dashboard</h2>
+    <div id="walletAddress" class="wallet-info">Not connected</div>
+    <div class="balance">Balance: $5,000,000.00 USD</div>
+    <div style="margin-top:10px;">Token: <strong>RichToken (RICH)</strong></div>
+    <button onclick="connectWallet()">Connect Wallet</button>
+  </div>
+
+  <script>
+    async function connectWallet() {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const response = await window.solana.connect();
+          document.getElementById('walletAddress').innerText = `Connected: ${response.publicKey.toString()}`;
+        } catch (err) {
+          alert('Connection rejected');
+        }
+      } else {
+        alert('Phantom Wallet not found. Use Phantom browser extension or mobile browser.');
+      }
+    }
+  </script>
 </body>
 </html>
