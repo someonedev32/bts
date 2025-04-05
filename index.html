@@ -21,6 +21,15 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
       max-width: 400px;
       text-align: center;
+      margin-bottom: 30px;
+    }
+    .chart-container {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      width: 600px;
+      margin-bottom: 20px;
     }
     button {
       background: #1f6feb;
@@ -54,6 +63,11 @@
     <button onclick="connectWallet()">Connect Wallet</button>
   </div>
 
+  <div class="chart-container">
+    <h3>Live Bitcoin Chart</h3>
+    <div id="tv_chart_container"></div>
+  </div>
+
   <script>
     async function connectWallet() {
       if (window.solana && window.solana.isPhantom) {
@@ -67,6 +81,26 @@
         alert('Phantom Wallet not found. Use Phantom browser extension or mobile browser.');
       }
     }
+
+    // Embed TradingView Bitcoin chart
+    new TradingView.widget({
+      autosize: true,
+      symbol: "BINANCE:BTCUSDT",  // BTC/USDT pair on Binance
+      interval: "5", // Time interval (5-minute chart)
+      container_id: "tv_chart_container",
+      datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
+      library_path: "https://s3.tradingview.com/",
+      locale: "en",
+      disabled_features: ["header_widget", "left_toolbar", "use_localstorage_for_settings"],
+      enabled_features: ["study_templates"],
+      overrides: {
+        "symbolWatermarkProperties.color": "#944DFF",  // Watermark color
+      }
+    });
   </script>
+
+  <!-- TradingView Script for Chart -->
+  <script type="text/javascript" src="https://unpkg.com/@tradingview/charting-library"></script>
+
 </body>
 </html>
