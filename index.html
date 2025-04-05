@@ -1,15 +1,3 @@
-It seems like you’d like to implement the additional functions you mentioned earlier, including:
-	1.	Real-time balance updates based on Bitcoin’s price.
-	2.	Pop-up functionality for Deposit and Withdrawal.
-	3.	Login functionality with a Dashboard view.
-	4.	App-like Footer with icons for navigation.
-	5.	QR Code Scanner for Wallet addresses.
-	6.	Toggle between Light and Dark mode.
-
-I’ll integrate all of these features together into the provided code. Here’s the full updated code with all the mentioned functionalities:
-
-Full Implementation Code:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,6 +69,15 @@ Full Implementation Code:
       padding: 15px;
       border-radius: 5px;
       width: 90%;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wallet-info i {
+      font-size: 24px;
+      margin-right: 8px; /* Space between icon and text */
     }
 
     .footer {
@@ -179,7 +176,9 @@ Full Implementation Code:
 <div id="dashboard" class="container" style="display:none;">
   <h2>Welcome to Your Wallet</h2>
   <div class="wallet-info" id="walletAddress" onclick="copyAddress()">Click to copy address</div>
-  <div class="wallet-info" id="walletBalance">Balance: $0.00 USDT</div> <!-- Initially 0.00 USDT -->
+  <div class="wallet-info" id="walletBalance">
+    <i class="fab fa-usdt" style="font-size: 24px; margin-right: 8px;"></i> Balance: $0.00 USDT
+  </div> <!-- Initially 0.00 USDT -->
 
   <button class="login-button" onclick="startScanner()">Scan QR</button>
 
@@ -243,7 +242,8 @@ Full Implementation Code:
   async function updateBalance() {
     currentBTCPrice = await fetchBitcoinPrice();  // Fetch the latest Bitcoin price
     const balanceInUSD = userBTC * currentBTCPrice;  // Calculate the user's balance
-    document.getElementById("walletBalance").innerText = `Balance: $${balanceInUSD.toFixed(2)}`;  // Update displayed balance
+    document.getElementById("walletBalance").innerHTML = 
+      `<i class="fab fa-usdt" style="font-size: 24px; margin-right: 8px;"></i> Balance: $${balanceInUSD.toFixed(2)} USDT`;
   }
 
   // Login function
@@ -326,4 +326,3 @@ Full Implementation Code:
 
 </body>
 </html>
-``
