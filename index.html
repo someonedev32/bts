@@ -140,6 +140,35 @@
       border-radius: 8px;
       cursor: pointer;
     }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .popup-content {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      text-align: center;
+    }
+    .popup .close-btn {
+      background: #dc3545;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
@@ -173,24 +202,26 @@
     <div style="margin-top:10px;">Token: <strong>RichToken (RICH)</strong></div>
     <button onclick="connectWallet()" class="login-button" style="margin-top: 15px;">Connect Wallet</button>
 
+    <!-- Low/High Price Buttons -->
     <div class="button-container">
-      <button class="low-button" onclick="setPriceLow()">Low</button>
-      <button class="high-button" onclick="setPriceHigh()">High</button>
+      <button class="low-button" onclick="priceAction('low')">Low</button>
+      <button class="high-button" onclick="priceAction('high')">High</button>
     </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
 
-  <!-- BTC Chart -->
-  <div class="chart-container hidden" id="chartSection">
-    <h3 style="text-align:center;">Live BTC/USDT Chart</h3>
-    <iframe 
-      src="https://www.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1"
-      width="100%" 
-      height="400" 
-      frameborder="0"
-      allowtransparency="true"
-      scrolling="no">
-    </iframe>
+    <!-- Bitcoin Chart -->
+    <div class="chart-container">
+      <h3 style="text-align:center;">Live BTC/USDT Chart</h3>
+      <iframe 
+        src="https://www.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1"
+        width="100%" 
+        height="400" 
+        frameborder="0"
+        allowtransparency="true"
+        scrolling="no">
+      </iframe>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 </div>
 
@@ -211,6 +242,14 @@
   <div class="footer-btn" onclick="alert('Settings clicked')">
     <i class="fas fa-cog"></i>
     Settings
+  </div>
+</div>
+
+<!-- Popup Notice -->
+<div id="popupNotice" class="popup">
+  <div class="popup-content">
+    <p>Your order has been processed to your brokerage.</p>
+    <button class="close-btn" onclick="closePopup()">Close</button>
   </div>
 </div>
 
@@ -258,38 +297,35 @@
     document.getElementById('loginForm').classList.add('hidden');
     document.getElementById('registerForm').classList.add('hidden');
     document.getElementById('walletDashboard').classList.remove('hidden');
-    document.getElementById('chartSection').classList.remove('hidden');
     document.getElementById('footerNav').classList.remove('hidden');
   }
 
   function logout() {
     document.getElementById('walletDashboard').classList.add('hidden');
-    document.getElementById('chartSection').classList.add('hidden');
     document.getElementById('footerNav').classList.add('hidden');
     document.getElementById('loginForm').classList.remove('hidden');
     document.getElementById('loginEmail').value = '';
     document.getElementById('loginPassword').value = '';
   }
 
-  async function connectWallet() {
+  function connectWallet() {
     if (window.solana && window.solana.isPhantom) {
-      try {
-        const response = await window.solana.connect();
+      window.solana.connect().then((response) => {
         document.getElementById('walletAddress').innerText = `Connected: ${response.publicKey.toString()}`;
-      } catch {
+      }).catch(() => {
         alert('Connection rejected');
-      }
+      });
     } else {
       alert('Phantom Wallet not found.');
     }
   }
 
-  function setPriceLow() {
-    alert('Low price action triggered');
+  function priceAction(type) {
+    document.getElementById('popupNotice').style.display = 'flex';
   }
 
-  function setPriceHigh() {
-    alert('High price action triggered');
+  function closePopup() {
+    document.getElementById('popupNotice').style.display = 'none';
   }
 </script>
 
