@@ -261,4 +261,44 @@
       document.getElementById("dashboard").style.display = "block";
       document.getElementById("appFooter").style.display = "flex";
       document.getElementById("walletAddress").innerText = "0xABCDEF1234567890"; // Example wallet address
-      updateBalance();
+      updateBalance();  // Fetch and update the balance after login
+    } else {
+      alert("Invalid credentials.");
+    }
+  }
+
+  // PWA - Service Worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").then(() => {
+      console.log("Service Worker Registered");
+    });
+  }
+
+  // Toggle theme for light/dark mode
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+  }
+
+  // Scan QR code functionality
+  function startScanner() {
+    document.getElementById("qrScanner").style.display = "flex";
+    const qrReader = new Html5Qrcode("qr-reader");
+    qrReader.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => {
+        document.getElementById("walletAddress").innerText = `Scanned: ${decodedText}`;
+        qrReader.stop();
+        document.getElementById("qrScanner").style.display = "none";
+      }
+    );
+  }
+
+  // Close QR scanner
+  function closeScanner() {
+    document.getElementById("qrScanner").style.display = "none";
+  }
+</script>
+
+</body>
+</html>
