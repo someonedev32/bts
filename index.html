@@ -1,26 +1,3 @@
-Let’s break down the tasks and integrate them into your wallet application:
-
-1. Display the Balance in USDT:
-
-We’ll change the balance to USDT (Tether), and calculate it based on Bitcoin. This will allow us to show the current balance in USDT on the dashboard.
-
-2. Add Popup Forms for Withdrawal and Deposit:
-
-We’ll create popups for both Withdrawal and Deposit. When the user clicks on the respective icon in the footer navigation, the appropriate popup will appear asking for an address (for both deposit and withdrawal).
-
-Full Implementation with These Features:
-
-1. Display the Balance in USDT:
-
-We’ll maintain the balance in BTC and convert it to USDT using the current BTC price.
-	•	We assume 1 BTC = 1 USD (in terms of Tether, but you can later replace this logic with any conversion if needed).
-
-2. Popup Forms for Withdrawal and Deposit:
-
-We’ll add popups triggered by clicking on the corresponding buttons in the footer navigation.
-
-Here’s the full updated code to include both features:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
