@@ -1,3 +1,26 @@
+Let’s break down the tasks and integrate them into your wallet application:
+
+1. Display the Balance in USDT:
+
+We’ll change the balance to USDT (Tether), and calculate it based on Bitcoin. This will allow us to show the current balance in USDT on the dashboard.
+
+2. Add Popup Forms for Withdrawal and Deposit:
+
+We’ll create popups for both Withdrawal and Deposit. When the user clicks on the respective icon in the footer navigation, the appropriate popup will appear asking for an address (for both deposit and withdrawal).
+
+Full Implementation with These Features:
+
+1. Display the Balance in USDT:
+
+We’ll maintain the balance in BTC and convert it to USDT using the current BTC price.
+	•	We assume 1 BTC = 1 USD (in terms of Tether, but you can later replace this logic with any conversion if needed).
+
+2. Popup Forms for Withdrawal and Deposit:
+
+We’ll add popups triggered by clicking on the corresponding buttons in the footer navigation.
+
+Here’s the full updated code to include both features:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,6 +127,47 @@
       align-items: center;
       flex-direction: column;
     }
+
+    .popup-form {
+      background: rgba(0, 0, 0, 0.8);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-container {
+      background: #333;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 80%;
+      text-align: center;
+    }
+
+    .popup-input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .popup-button {
+      width: 100%;
+      padding: 10px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -126,7 +190,7 @@
 <div id="dashboard" class="container" style="display:none;">
   <h2>Welcome to Your Wallet</h2>
   <div class="wallet-info" id="walletAddress" onclick="copyAddress()">Click to copy address</div>
-  <div class="wallet-info" id="walletBalance">Balance: $0.00</div> <!-- Initially 0.00 USD -->
+  <div class="wallet-info" id="walletBalance">Balance: $0.00 USDT</div> <!-- Initially 0.00 USDT -->
 
   <button class="login-button" onclick="startScanner()">Scan QR</button>
 
@@ -143,12 +207,31 @@
   <button class="login-button" onclick="closeScanner()">Close</button>
 </div>
 
+<!-- Deposit Popup -->
+<div id="depositPopup" class="popup-form">
+  <div class="popup-container">
+    <h3>Deposit USDT</h3>
+    <input type="text" id="depositAddress" class="popup-input" placeholder="Enter USDT Deposit Address" />
+    <button onclick="depositUSDT()" class="popup-button">Deposit</button>
+    <button onclick="closePopup('depositPopup')" class="popup-button" style="background:#f44336;">Close</button>
+  </div>
+</div>
+
+<!-- Withdraw Popup -->
+<div id="withdrawPopup" class="popup-form">
+  <div class="popup-container">
+    <h3>Withdraw USDT</h3>
+    <input type="text" id="withdrawAddress" class="popup-input" placeholder="Enter USDT Withdrawal Address" />
+    <button onclick="withdrawUSDT()" class="popup-button">Withdraw</button>
+    <button onclick="closePopup('withdrawPopup')" class="popup-button" style="background:#f44336;">Close</button>
+  </div>
+</div>
+
 <!-- Footer Navigation -->
 <div class="footer" id="appFooter" style="display:none;">
+  <div class="footer-btn" onclick="openWithdrawPopup()"><i class="fas fa-arrow-up"></i>Withdraw</div>
+  <div class="footer-btn" onclick="openDepositPopup()"><i class="fas fa-arrow-down"></i>Deposit</div>
   <div class="footer-btn"><i class="fas fa-wallet"></i>Wallet</div>
-  <div class="footer-btn"><i class="fas fa-arrow-down"></i>Deposit</div>
-  <div class="footer-btn"><i class="fas fa-arrow-up"></i>Withdraw</div>
-  <div class="footer-btn"><i class="fas fa-clock"></i>Transactions</div>
   <div class="footer-btn"><i class="fas fa-cog"></i>Settings</div>
 </div>
 
@@ -170,8 +253,8 @@
   // Function to update user's balance dynamically based on Bitcoin price
   async function updateBalance() {
     currentBTCPrice = await fetchBitcoinPrice();  // Fetch the latest Bitcoin price
-    const balanceInUSD = userBTC * currentBTCPrice;  // Calculate the user's balance
-    document.getElementById("walletBalance").innerText = `Balance: $${balanceInUSD.toFixed(2)}`;  // Update displayed balance
+    const balanceInUSDT = userBTC * currentBTCPrice;  // Calculate the user's balance in USDT (same as USD here)
+    document.getElementById("walletBalance").innerText = `Balance: $${balanceInUSDT.toFixed(2)} USDT`;  // Update displayed balance
   }
 
   // Login function
@@ -183,45 +266,4 @@
       document.getElementById("authSection").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
       document.getElementById("appFooter").style.display = "flex";
-      document.getElementById("walletAddress").innerText = "0xABCDEF1234567890"; // Example wallet address
-      updateBalance();  // Fetch and update the balance after login
-    } else {
-      alert("Invalid credentials.");
-    }
-  }
-
-  // PWA - Service Worker
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js").then(() => {
-      console.log("Service Worker Registered");
-    });
-  }
-
-  // Toggle theme for light/dark mode
-  function toggleTheme() {
-    document.body.classList.toggle("light-mode");
-  }
-
-  // Scan QR code functionality
-  function startScanner() {
-    document.getElementById("qrScanner").style.display = "flex";
-    const qrReader = new Html5Qrcode("qr-reader");
-    qrReader.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      (decodedText) => {
-        document.getElementById("walletAddress").innerText = `Scanned: ${decodedText}`;
-        qrReader.stop();
-        document.getElementById("qrScanner").style.display = "none";
-      }
-    );
-  }
-
-  // Close QR scanner
-  function closeScanner() {
-    document.getElementById("qrScanner").style.display = "none";
-  }
-</script>
-
-</body>
-</html>
+      document.getElementById("walletAddress").innerText = "0xABCDEF1234567890
