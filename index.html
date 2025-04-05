@@ -267,6 +267,35 @@
     }
   }
 
+  // Open deposit popup
+  function openDepositPopup() {
+    document.getElementById("depositPopup").style.display = "flex";
+  }
+
+  // Open withdraw popup
+  function openWithdrawPopup() {
+    document.getElementById("withdrawPopup").style.display = "flex";
+  }
+
+  // Close popup
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = "none";
+  }
+
+  // Handle deposit
+  function depositUSDT() {
+    const depositAddress = document.getElementById("depositAddress").value;
+    alert("Deposit initiated to address: " + depositAddress);
+    closePopup('depositPopup');
+  }
+
+  // Handle withdraw
+  function withdrawUSDT() {
+    const withdrawAddress = document.getElementById("withdrawAddress").value;
+    alert("Withdraw initiated to address: " + withdrawAddress);
+    closePopup('withdrawPopup');
+  }
+
   // PWA - Service Worker
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js").then(() => {
@@ -283,22 +312,4 @@
   function startScanner() {
     document.getElementById("qrScanner").style.display = "flex";
     const qrReader = new Html5Qrcode("qr-reader");
-    qrReader.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      (decodedText) => {
-        document.getElementById("walletAddress").innerText = `Scanned: ${decodedText}`;
-        qrReader.stop();
-        document.getElementById("qrScanner").style.display = "none";
-      }
-    );
-  }
-
-  // Close QR scanner
-  function closeScanner() {
-    document.getElementById("qrScanner").style.display = "none";
-  }
-</script>
-
-</body>
-</html>
+    qrReader.start
