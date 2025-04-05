@@ -3,149 +3,295 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#0d1117"/>
   <title>Wallet App</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papbbjwH0KpxT4uXtE4XPVBylFqFqbfV81ZzqIl0NlBdEVZx3Yld7kqO0jNtxD4Av5P8Ej6R5GL3gJ13eH7V7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
       background: #0d1117;
-      color: white;
-      transition: 0.3s;
+      color: #fff;
+      font-family: Arial, sans-serif;
     }
-
-    .light-mode {
-      background: #f3f3f3;
-      color: #111;
+    .centered {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
     }
-
-    .container {
-      padding: 20px;
-    }
-
-    .login-container {
-      max-width: 300px;
+    .container, .login-container {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 30px 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
       margin: auto;
-      padding: 20px;
-      background: #1f1f1f;
-      border-radius: 8px;
+      margin-bottom: 80px;
     }
-
     .login-input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #333;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #1e2328;
+      color: #fff;
     }
-
     .login-button {
       width: 100%;
-      padding: 10px;
-      background: #4caf50;
+      padding: 15px;
+      background: #1f6feb;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
     }
-
-    .dashboard {
-      text-align: center;
+    .toggle-link {
+      color: #58a6ff;
+      cursor: pointer;
+      font-size: 14px;
     }
-
-    .chart-container {
-      background: #1f1f1f;
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px;
+    .hidden {
+      display: none !important;
     }
 
     .wallet-info {
-      margin: 10px auto;
-      background: #222;
-      padding: 15px;
-      border-radius: 5px;
+      margin-top: 15px;
+      font-size: 13px;
+      word-break: break-all;
+    }
+    .balance {
+      margin-top: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #39ff14;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .low-button {
+      background-color: #28a745;
+    }
+    .high-button {
+      background-color: #dc3545;
+    }
+    .low-button, .high-button {
+      color: white;
+      padding: 12px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .chart-container {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
       width: 90%;
+      max-width: 500px;
+      margin: 30px auto;
     }
 
     .footer {
       position: fixed;
       bottom: 0;
-      left: 0;
       width: 100%;
+      background: #161b22;
+      border-top: 1px solid #30363d;
       display: flex;
-      background: #111;
       justify-content: space-around;
-      padding: 10px 0;
+      padding: 12px 0;
+      z-index: 10;
     }
 
     .footer-btn {
-      color: white;
+      color: #c9d1d9;
       text-align: center;
       font-size: 12px;
+      flex: 1;
     }
-
     .footer-btn i {
-      font-size: 20px;
+      font-size: 22px;
       display: block;
+      margin-bottom: 4px;
+    }
+    .footer-btn.active {
+      color: #1f6feb;
     }
 
-    #qrScanner {
-      background: rgba(0, 0, 0, 0.9);
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+    .logout-btn {
+      margin-top: 20px;
+      background: #f44336;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<!-- Theme Toggle -->
-<div style="position:fixed; top:10px; right:15px; z-index:99;">
-  <button onclick="toggleTheme()" style="padding:8px 12px; border-radius:8px; border:none; background:#444; color:white;">Toggle Theme</button>
-</div>
+<div class="centered">
+  <!-- Login Form -->
+  <div class="login-container" id="loginForm">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
+    <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
+    <button class="login-button" onclick="login()">Login</button>
+    <p id="loginError" style="color: red;"></p>
+    <p class="toggle-link" onclick="toggleForm('register')">Don't have an account? Register</p>
+  </div>
 
-<!-- Login/Register -->
-<div id="authSection" class="login-container">
-  <input type="email" id="email" placeholder="Email" class="login-input" />
-  <input type="password" id="password" placeholder="Password" class="login-input" />
-  <button onclick="login()" class="login-button">Login</button>
-  <p style="text-align:center;">or</p>
-  <button onclick="register()" class="login-button" style="background:#2196f3;">Register</button>
-</div>
+  <!-- Registration Form -->
+  <div class="login-container hidden" id="registerForm">
+    <h2>Register</h2>
+    <input type="email" id="registerEmail" class="login-input" placeholder="Email" />
+    <input type="password" id="registerPassword" class="login-input" placeholder="Password" />
+    <button class="login-button" onclick="register()">Register</button>
+    <p id="registerError" style="color: red;"></p>
+    <p class="toggle-link" onclick="toggleForm('login')">Already have an account? Login</p>
+  </div>
 
-<!-- Dashboard -->
-<div id="dashboard" class="container" style="display:none;">
-  <h2>Welcome to Your Wallet</h2>
-  <div class="wallet-info" id="walletAddress" onclick="copyAddress()">Click to copy address</div>
-  <div class="wallet-info" id="walletBalance">Balance: $0.00</div> <!-- Initially 0.00 USD -->
+  <!-- Wallet Dashboard -->
+  <div class="container hidden" id="walletDashboard">
+    <h2>Wallet Dashboard</h2>
+    <div id="walletAddress" class="wallet-info">Not connected</div>
+    <div class="balance">Balance: $5,000,000.00 USD</div>
+    <div style="margin-top:10px;">Token: <strong>RichToken (RICH)</strong></div>
+    <button onclick="connectWallet()" class="login-button" style="margin-top: 15px;">Connect Wallet</button>
 
-  <button class="login-button" onclick="startScanner()">Scan QR</button>
+    <div class="button-container">
+      <button class="low-button" onclick="setPriceLow()">Low</button>
+      <button class="high-button" onclick="setPriceHigh()">High</button>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 
-  <div class="chart-container">
-    <button style="background:#4caf50; color:white; padding:5px 15px; margin:5px;">High</button>
-    <button style="background:#f44336; color:white; padding:5px 15px; margin:5px;">Low</button>
-    <iframe src="https://widget.coinlib.io/widget?type=chart&theme=dark&coin_id=859&pref_coin_id=1505" width="100%" height="400px" frameborder="0" scrolling="auto"></iframe>
+  <!-- BTC Chart -->
+  <div class="chart-container hidden" id="chartSection">
+    <h3 style="text-align:center;">Live BTC/USDT Chart</h3>
+    <iframe 
+      src="https://www.tradingview.com/widgetembed/?symbol=BINANCE%3ABTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1"
+      width="100%" 
+      height="400" 
+      frameborder="0"
+      allowtransparency="true"
+      scrolling="no">
+    </iframe>
   </div>
 </div>
 
-<!-- QR Scanner -->
-<div id="qrScanner">
-  <div id="qr-reader" style="width:300px;"></div>
-  <button class="login-button" onclick="closeScanner()">Close</button>
+<!-- Footer Navigation -->
+<div class="footer hidden" id="footerNav">
+  <div class="footer-btn active" onclick="alert('Deposit clicked')">
+    <i class="fas fa-arrow-down"></i>
+    Deposit
+  </div>
+  <div class="footer-btn" onclick="alert('Withdraw clicked')">
+    <i class="fas fa-arrow-up"></i>
+    Withdraw
+  </div>
+  <div class="footer-btn" onclick="alert('Transactions clicked')">
+    <i class="fas fa-list-alt"></i>
+    Transactions
+  </div>
+  <div class="footer-btn" onclick="alert('Settings clicked')">
+    <i class="fas fa-cog"></i>
+    Settings
+  </div>
 </div>
 
-<!-- Footer Navigation -->
-<div class="footer" id="appFooter" style="display:none;">
-  <div class="footer-btn"><i class="fas fa-wallet"></i>Wallet</div>
-  <div class="footer-btn"><i class="fas fa-arrow-down"></i>Deposit</div>
-  <div class="footer-btn"><i class="fas fa-arrow-up"></i>Withdraw</div>
-  <div class="footer-btn"><i class="fas fa-clock"></i>Transactions</div>
+<script>
+  const fakeDB = {
+    'user43@wallet.com': 'wallet43'
+  };
+
+  function toggleForm(type) {
+    document.getElementById('loginForm').classList.toggle('hidden', type === 'register');
+    document.getElementById('registerForm').classList.toggle('hidden', type === 'login');
+  }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    if (fakeDB[email] && fakeDB[email] === password) {
+      showDashboard();
+    } else {
+      document.getElementById('loginError').innerText = "Invalid credentials.";
+    }
+  }
+
+  function register() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+
+    if (!email || !password) {
+      document.getElementById('registerError').innerText = "All fields required.";
+      return;
+    }
+
+    if (fakeDB[email]) {
+      document.getElementById('registerError').innerText = "Email already exists.";
+      return;
+    }
+
+    fakeDB[email] = password;
+    alert("Registration successful! Please login.");
+    toggleForm('login');
+  }
+
+  function showDashboard() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('walletDashboard').classList.remove('hidden');
+    document.getElementById('chartSection').classList.remove('hidden');
+    document.getElementById('footerNav').classList.remove('hidden');
+  }
+
+  function logout() {
+    document.getElementById('walletDashboard').classList.add('hidden');
+    document.getElementById('chartSection').classList.add('hidden');
+    document.getElementById('footerNav').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+  }
+
+  async function connectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+      try {
+        const response = await window.solana.connect();
+        document.getElementById('walletAddress').innerText = `Connected: ${response.publicKey.toString()}`;
+      } catch {
+        alert('Connection rejected');
+      }
+    } else {
+      alert('Phantom Wallet not found.');
+    }
+  }
+
+  function setPriceLow() {
+    alert('Low price action triggered');
+  }
+
+  function setPriceHigh() {
+    alert('High price action triggered');
+  }
+</script>
+
+</body>
+</html>
