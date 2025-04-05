@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wallet App</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-yH2q+gKP6I1YoKIp2IweZFSKd3wv1tbodvUeD2anvFYP3JqS3pGVPiq06Mw6oOogT3K8GP9qSOYPlrRNRd1fjg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     body {
       margin: 0;
@@ -126,8 +130,17 @@
     .footer-btn.active {
       color: #1f6feb;
     }
+
+    .logout-btn {
+      margin-top: 20px;
+      background: #f44336;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
   </style>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -164,6 +177,7 @@
       <button class="low-button" onclick="setPriceLow()">Low</button>
       <button class="high-button" onclick="setPriceHigh()">High</button>
     </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
   <!-- BTC Chart -->
@@ -246,6 +260,15 @@
     document.getElementById('walletDashboard').classList.remove('hidden');
     document.getElementById('chartSection').classList.remove('hidden');
     document.getElementById('footerNav').classList.remove('hidden');
+  }
+
+  function logout() {
+    document.getElementById('walletDashboard').classList.add('hidden');
+    document.getElementById('chartSection').classList.add('hidden');
+    document.getElementById('footerNav').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
   }
 
   async function connectWallet() {
