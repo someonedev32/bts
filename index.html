@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Wallet Dashboard</title>
+  <title>Wallet App</title>
   <style>
     body {
       background: #0d1117;
@@ -14,78 +14,21 @@
       align-items: center;
       padding-top: 50px;
     }
-    .container {
+    .container, .login-container {
       background: #161b22;
       border-radius: 12px;
       padding: 30px 40px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      max-width: 800px;
       text-align: center;
       margin-bottom: 30px;
-    }
-    .chart-container {
-      background: #161b22;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      width: 100%;
-      margin-bottom: 20px;
-    }
-    button {
-      color: white;
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: background-color 0.3s ease;
-    }
-    .wallet-info {
-      margin-top: 20px;
-      font-size: 14px;
-      word-break: break-all;
-    }
-    .balance {
-      margin-top: 20px;
-      font-size: 26px;
-      font-weight: bold;
-      color: #39ff14;
-    }
-    .button-container {
-      margin-bottom: 20px;
-    }
-    .low-button {
-      background-color: #28a745; /* Green for Low */
-      width: 200px;
-      font-size: 20px;
-    }
-    .high-button {
-      background-color: #dc3545; /* Red for High */
-      width: 200px;
-      font-size: 20px;
-    }
-    .low-button:hover {
-      background-color: #218838;
-    }
-    .high-button:hover {
-      background-color: #c82333;
-    }
-    /* Login Form Styles */
-    .login-container {
-      background: #161b22;
-      border-radius: 12px;
-      padding: 30px 40px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      width: 90%;
       max-width: 400px;
-      text-align: center;
-      margin-top: 100px;
     }
     .login-input {
       width: 100%;
       padding: 12px;
       margin-bottom: 20px;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
       border-radius: 8px;
       background: #1e2328;
       color: #fff;
@@ -100,86 +43,157 @@
       font-size: 18px;
       cursor: pointer;
     }
+    .toggle-link {
+      color: #58a6ff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .hidden {
+      display: none;
+    }
+    .dashboard {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 30px;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .dashboard h2 {
+      margin-bottom: 20px;
+    }
+    .icon-grid {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .icon-button {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 20px;
+      width: 140px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .icon-button:hover {
+      background: #30363d;
+    }
+    .icon-button i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .icon-label {
+      font-size: 16px;
+    }
+    .logout {
+      margin-top: 20px;
+      background: #dc3545;
+    }
   </style>
+  <!-- Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
   <!-- Login Form -->
   <div class="login-container" id="loginForm">
     <h2>Login</h2>
-    <input type="email" id="username" class="login-input" placeholder="Email" />
-    <input type="password" id="password" class="login-input" placeholder="Password" />
+    <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
+    <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
     <button class="login-button" onclick="login()">Login</button>
-    <div id="loginError" style="color: red; margin-top: 10px;"></div>
+    <p id="loginError" style="color: red;"></p>
+    <p class="toggle-link" onclick="toggleForm('register')">Don't have an account? Register</p>
   </div>
 
-  <!-- Wallet Dashboard (Initially Hidden) -->
-  <div class="container" id="walletDashboard" style="display: none;">
+  <!-- Registration Form -->
+  <div class="login-container hidden" id="registerForm">
+    <h2>Register</h2>
+    <input type="email" id="registerEmail" class="login-input" placeholder="Email" />
+    <input type="password" id="registerPassword" class="login-input" placeholder="Password" />
+    <button class="login-button" onclick="register()">Register</button>
+    <p id="registerError" style="color: red;"></p>
+    <p class="toggle-link" onclick="toggleForm('login')">Already have an account? Login</p>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard hidden" id="dashboard">
     <h2>Wallet Dashboard</h2>
-    <div id="walletAddress" class="wallet-info">Not connected</div>
-    <div class="balance">Balance: $5,000,000.00 USD</div>
-    <div style="margin-top:10px;">Token: <strong>RichToken (RICH)</strong></div>
-    <button onclick="connectWallet()">Connect Wallet</button>
-  </div>
-
-  <!-- Buttons for Low and High -->
-  <div class="button-container" id="buttonContainer" style="display: none;">
-    <button class="low-button" onclick="setPriceLow()">Low</button>
-    <button class="high-button" onclick="setPriceHigh()">High</button>
-  </div>
-
-  <!-- Bitcoin Live Chart Embed -->
-  <div class="chart-container" id="chartContainer" style="display: none;">
-    <h3>Live Bitcoin Chart</h3>
-    <iframe 
-      src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_3a4f1&symbol=BINANCE%3ABTCUSDT&interval=5&hidetoptoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]&theme=Dark&style=1&timezone=America%2FNew_York"
-      width="100%" 
-      height="500" 
-      frameborder="0" 
-      allowtransparency="true">
-    </iframe>
+    <div class="icon-grid">
+      <div class="icon-button" onclick="alert('Deposit clicked')">
+        <i class="fas fa-arrow-down"></i>
+        <div class="icon-label">Deposit</div>
+      </div>
+      <div class="icon-button" onclick="alert('Withdraw clicked')">
+        <i class="fas fa-arrow-up"></i>
+        <div class="icon-label">Withdraw</div>
+      </div>
+      <div class="icon-button" onclick="alert('Transactions clicked')">
+        <i class="fas fa-list-alt"></i>
+        <div class="icon-label">Transactions</div>
+      </div>
+      <div class="icon-button" onclick="alert('Settings clicked')">
+        <i class="fas fa-cog"></i>
+        <div class="icon-label">Settings</div>
+      </div>
+    </div>
+    <button class="login-button logout" onclick="logout()">Logout</button>
   </div>
 
   <script>
-    // Function to handle login
+    // Temporary "database"
+    const fakeDB = {
+      'user43@wallet.com': 'wallet43'
+    };
+
+    function toggleForm(formType) {
+      document.getElementById('loginForm').classList.toggle('hidden', formType === 'register');
+      document.getElementById('registerForm').classList.toggle('hidden', formType === 'login');
+    }
+
     function login() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
 
-      // Check credentials
-      if (username === "user43@wallet.com" && password === "wallet43") {
-        // Hide the login form and show the wallet dashboard and other content
-        document.getElementById("loginForm").style.display = "none";
-        document.getElementById("walletDashboard").style.display = "block";
-        document.getElementById("buttonContainer").style.display = "block";
-        document.getElementById("chartContainer").style.display = "block";
+      if (fakeDB[email] && fakeDB[email] === password) {
+        showDashboard();
       } else {
-        // Show error message if credentials are incorrect
-        document.getElementById("loginError").innerText = "Invalid username or password!";
+        document.getElementById('loginError').innerText = "Invalid login credentials.";
       }
     }
 
-    // Function for Wallet Connection
-    async function connectWallet() {
-      if (window.solana && window.solana.isPhantom) {
-        try {
-          const response = await window.solana.connect();
-          document.getElementById('walletAddress').innerText = `Connected: ${response.publicKey.toString()}`;
-        } catch (err) {
-          alert('Connection rejected');
-        }
-      } else {
-        alert('Phantom Wallet not found. Use Phantom browser extension or mobile browser.');
+    function register() {
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      if (!email || !password) {
+        document.getElementById('registerError').innerText = "All fields are required.";
+        return;
       }
+
+      if (fakeDB[email]) {
+        document.getElementById('registerError').innerText = "Email already exists.";
+        return;
+      }
+
+      fakeDB[email] = password;
+      alert("Registration successful! You can now login.");
+      toggleForm('login');
     }
 
-    // Functions for Low and High buttons
-    function setPriceLow() {
-      alert('Low price button clicked');
+    function showDashboard() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
     }
 
-    function setPriceHigh() {
-      alert('High price button clicked');
+    function logout() {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPassword').value = '';
     }
   </script>
 
