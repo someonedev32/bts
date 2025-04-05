@@ -1,3 +1,15 @@
+It seems like you’d like to implement the additional functions you mentioned earlier, including:
+	1.	Real-time balance updates based on Bitcoin’s price.
+	2.	Pop-up functionality for Deposit and Withdrawal.
+	3.	Login functionality with a Dashboard view.
+	4.	App-like Footer with icons for navigation.
+	5.	QR Code Scanner for Wallet addresses.
+	6.	Toggle between Light and Dark mode.
+
+I’ll integrate all of these features together into the provided code. Here’s the full updated code with all the mentioned functionalities:
+
+Full Implementation Code:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -230,8 +242,8 @@
   // Function to update user's balance dynamically based on Bitcoin price
   async function updateBalance() {
     currentBTCPrice = await fetchBitcoinPrice();  // Fetch the latest Bitcoin price
-    const balanceInUSDT = userBTC * currentBTCPrice;  // Calculate the user's balance in USDT (same as USD here)
-    document.getElementById("walletBalance").innerText = `Balance: $${balanceInUSDT.toFixed(2)} USDT`;  // Update displayed balance
+    const balanceInUSD = userBTC * currentBTCPrice;  // Calculate the user's balance
+    document.getElementById("walletBalance").innerText = `Balance: $${balanceInUSD.toFixed(2)}`;  // Update displayed balance
   }
 
   // Login function
@@ -243,4 +255,75 @@
       document.getElementById("authSection").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
       document.getElementById("appFooter").style.display = "flex";
-      document.getElementById("walletAddress").innerText = "0xABCDEF1234567890
+      document.getElementById("walletAddress").innerText = "0xABCDEF1234567890"; // Example wallet address
+      updateBalance();  // Fetch and update the balance after login
+    } else {
+      alert("Invalid credentials.");
+    }
+  }
+
+  // PWA - Service Worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").then(() => {
+      console.log("Service Worker Registered");
+    });
+  }
+
+  // Toggle theme for light/dark mode
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+  }
+
+  // Scan QR code functionality
+  function startScanner() {
+    document.getElementById("qrScanner").style.display = "flex";
+    const qrReader = new Html5Qrcode("qr-reader");
+    qrReader.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => {
+        document.getElementById("walletAddress").innerText = `Scanned: ${decodedText}`;
+        qrReader.stop();
+        document.getElementById("qrScanner").style.display = "none";
+      }
+    );
+  }
+
+  // Close QR scanner
+  function closeScanner() {
+    document.getElementById("qrScanner").style.display = "none";
+  }
+
+  // Open Deposit Popup
+  function openDepositPopup() {
+    document.getElementById("depositPopup").style.display = "flex";
+  }
+
+  // Open Withdraw Popup
+  function openWithdrawPopup() {
+    document.getElementById("withdrawPopup").style.display = "flex";
+  }
+
+  // Close Popup
+  function closePopup(popupId) {
+    document.getElementById(popupId).style.display = "none";
+  }
+
+  // Handle Deposit Function
+  function depositUSDT() {
+    const depositAddress = document.getElementById("depositAddress").value;
+    alert(`Depositing USDT to: ${depositAddress}`);
+    closePopup("depositPopup");
+  }
+
+  // Handle Withdraw Function
+  function withdrawUSDT() {
+    const withdrawAddress = document.getElementById("withdrawAddress").value;
+    alert(`Withdrawing USDT to: ${withdrawAddress}`);
+    closePopup("withdrawPopup");
+  }
+</script>
+
+</body>
+</html>
+``
