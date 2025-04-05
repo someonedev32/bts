@@ -58,14 +58,14 @@
   <div class="container">
     <h2>Wallet Dashboard</h2>
     <div id="walletAddress" class="wallet-info">Not connected</div>
-    <div class="balance">Balance: $5,000,000.00</div>
+    <div class="balance">Balance: $5,000,000.00 USD</div>
     <div style="margin-top:10px;">Token: <strong>RichToken (RICH)</strong></div>
     <button onclick="connectWallet()">Connect Wallet</button>
   </div>
 
   <div class="chart-container">
     <h3>Live Bitcoin Chart</h3>
-    <!-- TradingView Widget -->
+    <!-- TradingView Chart -->
     <div id="tv_chart_container" style="height: 500px;"></div>
   </div>
 
@@ -83,11 +83,11 @@
       }
     }
 
-    // Embed TradingView Bitcoin chart
+    // TradingView Widget - Live Bitcoin Chart
     new TradingView.widget({
       autosize: true,
-      symbol: "BINANCE:BTCUSDT",  // BTC/USDT pair on Binance
-      interval: "5", // Time interval (5-minute chart)
+      symbol: "BINANCE:BTCUSDT",  // Trading pair: Bitcoin to USDT
+      interval: "5", // 5 minute candlestick chart
       container_id: "tv_chart_container",
       datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
       library_path: "https://s3.tradingview.com/",
@@ -95,12 +95,12 @@
       disabled_features: ["header_widget", "left_toolbar", "use_localstorage_for_settings"],
       enabled_features: ["study_templates"],
       overrides: {
-        "symbolWatermarkProperties.color": "#944DFF",  // Watermark color
+        "symbolWatermarkProperties.color": "#944DFF",  // Custom watermark color
       }
     });
   </script>
 
-  <!-- TradingView Script for Chart -->
+  <!-- TradingView Library -->
   <script type="text/javascript" src="https://unpkg.com/@tradingview/charting-library"></script>
 
 </body>
