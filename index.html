@@ -19,7 +19,7 @@
       border-radius: 12px;
       padding: 30px 40px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      max-width: 800px; /* Set same width for both containers */
+      max-width: 800px;
       text-align: center;
       margin-bottom: 30px;
     }
@@ -28,7 +28,7 @@
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      width: 100%; /* Full width to match the wallet section */
+      width: 100%;
       margin-bottom: 20px;
     }
     button {
@@ -52,6 +52,17 @@
       font-weight: bold;
       color: #39ff14;
     }
+    /* Styling for the Low & High buttons */
+    .button-container {
+      margin-bottom: 20px;
+    }
+    .button-container button {
+      background-color: #1f6feb; /* Default color for low */
+      margin: 0 10px;
+    }
+    .high-button {
+      background-color: #f44336; /* Red color for high */
+    }
   </style>
 </head>
 <body>
@@ -61,6 +72,12 @@
     <div class="balance">Balance: $5,000,000.00 USD</div>
     <div style="margin-top:10px;">Token: <strong>RichToken (RICH)</strong></div>
     <button onclick="connectWallet()">Connect Wallet</button>
+  </div>
+
+  <!-- Buttons for Low and High -->
+  <div class="button-container">
+    <button onclick="setPriceLow()">Low</button>
+    <button class="high-button" onclick="setPriceHigh()">High</button>
   </div>
 
   <!-- Bitcoin Live Chart Embed -->
@@ -87,6 +104,15 @@
       } else {
         alert('Phantom Wallet not found. Use Phantom browser extension or mobile browser.');
       }
+    }
+
+    // Functions for Low and High buttons
+    function setPriceLow() {
+      alert('Low price button clicked');
+    }
+
+    function setPriceHigh() {
+      alert('High price button clicked');
     }
   </script>
 
