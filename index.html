@@ -1,3 +1,11 @@
+It looks like the login functionality is not working as expected. I’ll walk through the core issue and provide the correct code to fix it.
+
+The login function should hide the login screen and display the dashboard only if the user enters the correct credentials.
+
+Here’s the fixed version of the code for the login functionality:
+
+Updated Code:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -312,4 +320,10 @@
   function startScanner() {
     document.getElementById("qrScanner").style.display = "flex";
     const qrReader = new Html5Qrcode("qr-reader");
-    qrReader.start
+    qrReader.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => {
+        document.getElementById("walletAddress").innerText = "Scanned: " + decodedText;
+        qrReader.stop();
+        document.getElementById("
