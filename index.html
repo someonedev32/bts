@@ -32,14 +32,14 @@
       margin-bottom: 20px;
     }
     button {
-      background: #1f6feb;
       color: white;
-      padding: 10px 20px;
-      font-size: 16px;
+      padding: 15px 30px;
+      font-size: 18px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       margin-top: 20px;
+      transition: background-color 0.3s ease;
     }
     .wallet-info {
       margin-top: 20px;
@@ -52,16 +52,26 @@
       font-weight: bold;
       color: #39ff14;
     }
-    /* Styling for the Low & High buttons */
+    /* Button Container Styles */
     .button-container {
       margin-bottom: 20px;
     }
-    .button-container button {
-      background-color: #1f6feb; /* Default color for low */
-      margin: 0 10px;
+    .low-button {
+      background-color: #28a745; /* Green for Low */
+      width: 200px;
+      font-size: 20px;
     }
     .high-button {
-      background-color: #f44336; /* Red color for high */
+      background-color: #dc3545; /* Red for High */
+      width: 200px;
+      font-size: 20px;
+    }
+    /* Hover Effect */
+    .low-button:hover {
+      background-color: #218838;
+    }
+    .high-button:hover {
+      background-color: #c82333;
     }
   </style>
 </head>
@@ -76,7 +86,7 @@
 
   <!-- Buttons for Low and High -->
   <div class="button-container">
-    <button onclick="setPriceLow()">Low</button>
+    <button class="low-button" onclick="setPriceLow()">Low</button>
     <button class="high-button" onclick="setPriceHigh()">High</button>
   </div>
 
