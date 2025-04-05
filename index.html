@@ -1,239 +1,4 @@
-It looks like the login functionality is not working as expected. I’ll walk through the core issue and provide the correct code to fix it.
-
-The login function should hide the login screen and display the dashboard only if the user enters the correct credentials.
-
-Here’s the fixed version of the code for the login functionality:
-
-Updated Code:
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#0d1117"/>
-  <title>Wallet App</title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0d1117;
-      color: white;
-      transition: 0.3s;
-    }
-
-    .light-mode {
-      background: #f3f3f3;
-      color: #111;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    .login-container {
-      max-width: 300px;
-      margin: auto;
-      padding: 20px;
-      background: #1f1f1f;
-      border-radius: 8px;
-    }
-
-    .login-input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .login-button {
-      width: 100%;
-      padding: 10px;
-      background: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .dashboard {
-      text-align: center;
-    }
-
-    .chart-container {
-      background: #1f1f1f;
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px;
-    }
-
-    .wallet-info {
-      margin: 10px auto;
-      background: #222;
-      padding: 15px;
-      border-radius: 5px;
-      width: 90%;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .wallet-info i {
-      font-size: 24px;
-      margin-right: 8px; /* Space between icon and text */
-    }
-
-    .wallet-info span {
-      font-size: 18px;
-      color: #ffffff; /* Ensures the text color is white */
-    }
-
-    .footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      background: #111;
-      justify-content: space-around;
-      padding: 10px 0;
-    }
-
-    .footer-btn {
-      color: white;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .footer-btn i {
-      font-size: 20px;
-      display: block;
-    }
-
-    #qrScanner {
-      background: rgba(0, 0, 0, 0.9);
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    .popup-form {
-      background: rgba(0, 0, 0, 0.8);
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .popup-container {
-      background: #333;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 400px;
-      width: 80%;
-      text-align: center;
-    }
-
-    .popup-input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      background: #444;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .popup-button {
-      width: 100%;
-      padding: 10px;
-      background: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-
-<!-- Theme Toggle -->
-<div style="position:fixed; top:10px; right:15px; z-index:99;">
-  <button onclick="toggleTheme()" style="padding:8px 12px; border-radius:8px; border:none; background:#444; color:white;">Toggle Theme</button>
-</div>
-
-<!-- Login/Register -->
-<div id="authSection" class="login-container">
-  <input type="email" id="email" placeholder="Email" class="login-input" />
-  <input type="password" id="password" placeholder="Password" class="login-input" />
-  <button onclick="login()" class="login-button">Login</button>
-  <p style="text-align:center;">or</p>
-  <button onclick="register()" class="login-button" style="background:#2196f3;">Register</button>
-</div>
-
-<!-- Dashboard -->
-<div id="dashboard" class="container" style="display:none;">
-  <h2>Welcome to Your Wallet</h2>
-  <div class="wallet-info" id="walletAddress" onclick="copyAddress()">Click to copy address</div>
-  <div class="wallet-info" id="walletBalance">
-    <i class="fab fa-usdt" style="font-size: 24px; margin-right: 8px;"></i> Balance: $0.00 <span>USDT</span>
-  </div> <!-- Initially 0.00 USDT -->
-
-  <button class="login-button" onclick="startScanner()">Scan QR</button>
-
-  <div class="chart-container">
-    <button style="background:#4caf50; color:white; padding:5px 15px; margin:5px;">High</button>
-    <button style="background:#f44336; color:white; padding:5px 15px; margin:5px;">Low</button>
-    <iframe src="https://widget.coinlib.io/widget?type=chart&theme=dark&coin_id=859&pref_coin_id=1505" width="100%" height="400px" frameborder="0" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- QR Scanner -->
-<div id="qrScanner">
-  <div id="qr-reader" style="width:300px;"></div>
-  <button class="login-button" onclick="closeScanner()">Close</button>
-</div>
-
-<!-- Deposit Popup -->
-<div id="depositPopup" class="popup-form">
-  <div class="popup-container">
-    <h3>Deposit USDT</h3>
-    <input type="text" id="depositAddress" class="popup-input" placeholder="Enter USDT Deposit Address" />
-    <button onclick="depositUSDT()" class="popup-button">Deposit</button>
-    <button onclick="closePopup('depositPopup')" class="popup-button" style="background:#f44336;">Close</button>
-  </div>
-</div>
-
-<!-- Withdraw Popup -->
-<div id="withdrawPopup" class="popup-form">
-  <div class="popup-container">
-    <h3>Withdraw USDT</h3>
-    <input type="text" id="withdrawAddress" class="popup-input" placeholder="Enter USDT Withdrawal Address" />
-    <button onclick="withdrawUSDT()" class="popup-button">Withdraw</button>
-    <button onclick="closePopup('withdrawPopup')" class="popup-button" style="background:#f44336;">Close</button>
-  </div>
-</div>
-
-<!-- Footer Navigation -->
-<div class="footer" id="appFooter" style="display:none;">
-  <div class="footer-btn" onclick="openWithdrawPopup()"><i class="fas fa-arrow-up"></i>Withdraw</div>
-  <div class="footer-btn" onclick="openDepositPopup()"><i class="fas fa-arrow-down"></i>Deposit</div>
-  <div class="footer-btn"><i class="fas fa-wallet"></i>Wallet</div>
-  <div class="footer-btn"><i class="fas fa-cog"></i>Settings</div>
+<div class="footer-btn"><i class="fas fa-cog"></i>Settings</div>
 </div>
 
 <!-- Scripts -->
@@ -255,8 +20,7 @@ Updated Code:
   async function updateBalance() {
     currentBTCPrice = await fetchBitcoinPrice();  // Fetch the latest Bitcoin price
     const balanceInUSD = userBTC * currentBTCPrice;  // Calculate the user's balance
-    document.getElementById("walletBalance").innerHTML = 
-      `<i class="fab fa-usdt" style="font-size: 24px; margin-right: 8px;"></i> Balance: $${balanceInUSD.toFixed(2)} <span>USDT</span>`;
+    document.getElementById("walletBalance").innerText = Balance: $${balanceInUSD.toFixed(2)};  // Update displayed balance
   }
 
   // Login function
@@ -273,35 +37,6 @@ Updated Code:
     } else {
       alert("Invalid credentials.");
     }
-  }
-
-  // Open deposit popup
-  function openDepositPopup() {
-    document.getElementById("depositPopup").style.display = "flex";
-  }
-
-  // Open withdraw popup
-  function openWithdrawPopup() {
-    document.getElementById("withdrawPopup").style.display = "flex";
-  }
-
-  // Close popup
-  function closePopup(popupId) {
-    document.getElementById(popupId).style.display = "none";
-  }
-
-  // Handle deposit
-  function depositUSDT() {
-    const depositAddress = document.getElementById("depositAddress").value;
-    alert("Deposit initiated to address: " + depositAddress);
-    closePopup('depositPopup');
-  }
-
-  // Handle withdraw
-  function withdrawUSDT() {
-    const withdrawAddress = document.getElementById("withdrawAddress").value;
-    alert("Withdraw initiated to address: " + withdrawAddress);
-    closePopup('withdrawPopup');
   }
 
   // PWA - Service Worker
@@ -324,6 +59,18 @@ Updated Code:
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
       (decodedText) => {
-        document.getElementById("walletAddress").innerText = "Scanned: " + decodedText;
+        document.getElementById("walletAddress").innerText = Scanned: ${decodedText};
         qrReader.stop();
-        document.getElementById("
+        document.getElementById("qrScanner").style.display = "none";
+      }
+    );
+  }
+
+  // Close QR scanner
+  function closeScanner() {
+    document.getElementById("qrScanner").style.display = "none";
+  }
+</script>
+
+</body>
+</html>
