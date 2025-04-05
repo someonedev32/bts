@@ -13,3 +13,5 @@ self.addEventListener('fetch', e => {
     })
   );
 });
+
+setInterval(updateBalance, 60000); // Update balance every minute
