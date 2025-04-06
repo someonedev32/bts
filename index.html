@@ -192,10 +192,28 @@
 
   // Check if user is already logged in
   window.onload = function() {
-    if (localStorage.getItem('loggedIn') === 'true') {
+    const loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn === 'true') {
       showDashboard();
+    } else {
+      showLogin();
     }
   };
+
+  // Show login form
+  function showLogin() {
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('footerNav').classList.add('hidden');
+  }
+
+  // Show the dashboard
+  function showDashboard() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('footerNav').classList.remove('hidden');
+    fetchBTCPrice();
+  }
 
   // Handle login logic
   function login() {
@@ -209,20 +227,10 @@
     }
   }
 
-  // Show the dashboard
-  function showDashboard() {
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    document.getElementById('footerNav').classList.remove('hidden');
-    fetchBTCPrice();
-  }
-
   // Logout user
   function logout() {
     localStorage.removeItem('loggedIn');
-    document.getElementById('dashboard').classList.add('hidden');
-    document.getElementById('footerNav').classList.add('hidden');
-    document.getElementById('loginForm').classList.remove('hidden');
+    showLogin();
   }
 
   // Open modal
