@@ -190,10 +190,17 @@
     "user77@walletbtc.online": "kouhG/<3!@"
   };
 
+  window.onload = function() {
+    if (localStorage.getItem('loggedIn') === 'true') {
+      showDashboard();
+    }
+  };
+
   function login() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     if (fakeDB[email] === password) {
+      localStorage.setItem('loggedIn', 'true');
       showDashboard();
     } else {
       document.getElementById('loginError').innerText = "Invalid credentials.";
@@ -208,6 +215,7 @@
   }
 
   function logout() {
+    localStorage.removeItem('loggedIn');
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('footerNav').classList.add('hidden');
     document.getElementById('loginForm').classList.remove('hidden');
