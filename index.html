@@ -149,7 +149,7 @@
   </div>
   <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
   <button class="logout-btn" onclick="logout()">Logout</button>
-<iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
 <div class="footer hidden" id="footerNav">
@@ -261,7 +261,7 @@
       const btcPrice = data.bitcoin.usd;
       const usdtAmount = 4900000;
       const btcAmount = (usdtAmount / btcPrice).toFixed(6);
-      document.getElementById("btcAmount").innerText = ${btcAmount};
+      document.getElementById("btcAmount").innerText = `${btcAmount}`;
     } catch (e) {
       document.getElementById("btcAmount").innerText = "Error loading";
     }
