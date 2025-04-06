@@ -12,16 +12,22 @@
       font-family: 'Inter', sans-serif;
       background-color: #121212;
       color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     /* Login Screen */
     .login-container {
       width: 100%;
       max-width: 450px;
-      margin: 80px auto;
       background: #1e1e1e;
       padding: 25px;
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .login-container h2 {
       text-align: center;
@@ -64,6 +70,10 @@
     .dashboard-container {
       display: none;
       padding: 20px;
+      width: 100%;
+      max-width: 1000px;
+      background-color: #121212;
+      border-radius: 15px;
     }
     .navbar {
       background-color: #1e1e1e;
@@ -190,6 +200,18 @@
     .copy-btn:hover {
       background-color: #45a049;
     }
+    .modal-close {
+      background: #f44336;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      width: 100%;
+      color: white;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      background-color: #d32f2f;
+    }
   </style>
 </head>
 <body>
@@ -250,6 +272,7 @@
     <p>Email: user77@walletbtc.com</p>
     <p>Password: user77@()</p>
     <button class="modal-button" onclick="changePassword()">Change Password</button>
+    <button class="modal-close" onclick="closeModal('userOptionsModal')">Close</button>
   </div>
 </div>
 
@@ -259,6 +282,7 @@
     <h3>Enter Amount to Deposit</h3>
     <input type="number" id="depositAmount" class="login-input" placeholder="Amount in USDT" />
     <button class="modal-button" onclick="submitDeposit()">Submit</button>
+    <button class="modal-close" onclick="closeModal('depositModal')">Close</button>
   </div>
 </div>
 
@@ -268,6 +292,7 @@
     <h3>Enter BTC Address to Withdraw</h3>
     <input type="text" id="withdrawAddress" class="login-input" placeholder="BTC Address" />
     <button class="modal-button" onclick="submitWithdrawal()">Submit</button>
+    <button class="modal-close" onclick="closeModal('withdrawModal')">Close</button>
   </div>
 </div>
 
@@ -276,6 +301,7 @@
   <div class="modal-content">
     <h3>Transactions History</h3>
     <p>No transactions yet.</p>
+    <button class="modal-close" onclick="closeModal('transactionModal')">Close</button>
   </div>
 </div>
 
@@ -300,7 +326,7 @@
 
   function logout() {
     document.getElementById('dashboardContainer').style.display = 'none';
-    document.getElementById('loginContainer').style.display = 'block';
+    document.getElementById('loginContainer').style.display = 'flex';
   }
 
   function openModal(modalId) {
