@@ -120,6 +120,7 @@
 </head>
 <body>
 
+<!-- Login Form -->
 <div class="login-container" id="loginForm">
   <h2>Login</h2>
   <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
@@ -128,6 +129,7 @@
   <p style="color:red;" id="loginError"></p>
 </div>
 
+<!-- Dashboard (Visible after Login) -->
 <div class="container hidden" id="dashboard">
   <h2>Wallet Dashboard</h2>
   <div class="wallet-info" id="walletAddress">Not connected</div>
@@ -138,10 +140,11 @@
     ≈ <span id="btcAmount">Loading...</span> BTC
   </div>
   <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
-  <button class="logout-btn" onclick="openModal('settingsModal')">Settings</button>
+  <button class="logout-btn" onclick="logout()">Logout</button>
   <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
+<!-- Footer Nav (Visible only on Dashboard) -->
 <div class="footer hidden" id="footerNav">
   <div class="footer-btn" onclick="openModal('depositModal')">
     <i class="fas fa-arrow-down"></i>Deposit
@@ -174,14 +177,6 @@
     <input type="text" class="login-input" placeholder="Wallet Address (BTC)" id="btcAddress" />
     <button class="login-button" onclick="withdrawAll()">Withdraw All</button>
     <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
-  </div>
-</div>
-
-<!-- Settings Modal -->
-<div class="modal" id="settingsModal">
-  <div class="modal-content">
-    <h3>Settings</h3>
-    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 </div>
 
