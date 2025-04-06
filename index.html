@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>iOS Wallet App</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <title>Wallet BTC</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     body {
       margin: 0;
@@ -18,7 +18,7 @@
       padding: 25px 20px;
       width: 92%;
       max-width: 500px;
-      margin: 20px auto;
+      margin: 40px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.4);
     }
     .login-input {
@@ -26,18 +26,19 @@
       padding: 14px;
       margin-bottom: 16px;
       border-radius: 8px;
-      border: 1px solid #333;
+      border: 1px solid #30363d;
       background: #1e2328;
       color: #fff;
     }
     .login-button {
       width: 100%;
       padding: 14px;
-      background: #1f6feb;
+      background: #238636;
       color: white;
       border: none;
       border-radius: 8px;
       font-size: 17px;
+      font-weight: 600;
     }
     .logout-btn {
       margin-top: 20px;
@@ -47,6 +48,7 @@
       color: #fff;
       border-radius: 8px;
       width: 100%;
+      font-weight: 600;
     }
     .hidden { display: none; }
 
@@ -98,12 +100,6 @@
       line-height: 1.8;
     }
 
-    .wallet-info {
-      font-size: 12px;
-      word-break: break-word;
-      margin-top: 10px;
-    }
-
     iframe {
       border-radius: 10px;
       width: 100%;
@@ -120,31 +116,26 @@
 </head>
 <body>
 
-<!-- Login Form -->
 <div class="login-container" id="loginForm">
-  <h2>Login</h2>
+  <h2 style="text-align:center;">Wallet Login</h2>
   <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
   <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
   <button class="login-button" onclick="login()">Login</button>
   <p style="color:red;" id="loginError"></p>
 </div>
 
-<!-- Dashboard (Visible after Login) -->
 <div class="container hidden" id="dashboard">
   <h2>Wallet Dashboard</h2>
-  <div class="wallet-info" id="walletAddress">Not connected</div>
   <div class="balance">
     <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="crypto-icon" />
     Balance: 4,900,000.00 USDT<br>
     <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="crypto-icon" />
     ≈ <span id="btcAmount">Loading...</span> BTC
   </div>
-  <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
   <button class="logout-btn" onclick="logout()">Logout</button>
   <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
-<!-- Footer Nav (Visible only on Dashboard) -->
 <div class="footer hidden" id="footerNav">
   <div class="footer-btn" onclick="openModal('depositModal')">
     <i class="fas fa-arrow-down"></i>Deposit
@@ -174,35 +165,28 @@
 <div class="modal" id="withdrawModal">
   <div class="modal-content">
     <h3>Withdraw</h3>
-    <input type="text" class="login-input" placeholder="Wallet Address (BTC)" id="btcAddress" />
-    <button class="login-button" onclick="withdrawAll()">Withdraw All</button>
+    <input type="number" class="login-input" placeholder="Amount" />
+    <button class="login-button">Confirm</button>
     <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
   </div>
 </div>
 
 <script>
-  const fakeDB = {
-    "user77@walletbtc.online": "kouhG/<3!@"
+  const allowedUser = {
+    email: "user77@walletbtc.com",
+    password: "user77@()"
   };
 
-  // Check if user is already logged in
-  window.onload = function() {
-    const loggedIn = localStorage.getItem('loggedIn');
-    if (loggedIn === 'true') {
+  function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (email === allowedUser.email && password === allowedUser.password) {
       showDashboard();
     } else {
-      showLogin();
+      document.getElementById('loginError').innerText = "Invalid credentials.";
     }
-  };
-
-  // Show login form
-  function showLogin() {
-    document.getElementById('loginForm').classList.remove('hidden');
-    document.getElementById('dashboard').classList.add('hidden');
-    document.getElementById('footerNav').classList.add('hidden');
   }
 
-  // Show the dashboard
   function showDashboard() {
     document.getElementById('loginForm').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
@@ -210,49 +194,23 @@
     fetchBTCPrice();
   }
 
-  // Handle login logic
-  function login() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    if (fakeDB[email] === password) {
-      localStorage.setItem('loggedIn', 'true');
-      showDashboard();
-    } else {
-      document.getElementById('loginError').innerText = "Invalid credentials.";
-    }
-  }
-
-  // Logout user
   function logout() {
-    localStorage.removeItem('loggedIn');
-    showLogin();
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('footerNav').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('loginError').innerText = '';
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
   }
 
-  // Open modal
   function openModal(id) {
     document.getElementById(id).style.display = 'flex';
   }
 
-  // Close modal
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
   }
 
-  // Connect wallet (simulate Phantom wallet)
-  async function connectWallet() {
-    if (window.solana && window.solana.isPhantom) {
-      try {
-        const resp = await window.solana.connect();
-        document.getElementById("walletAddress").innerText = "Connected: " + resp.publicKey.toString();
-      } catch (err) {
-        alert("Connection rejected.");
-      }
-    } else {
-      alert("Phantom Wallet not installed.");
-    }
-  }
-
-  // Fetch BTC price from CoinGecko
   async function fetchBTCPrice() {
     try {
       const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
@@ -260,21 +218,10 @@
       const btcPrice = data.bitcoin.usd;
       const usdtAmount = 4900000;
       const btcAmount = (usdtAmount / btcPrice).toFixed(6);
-      document.getElementById("btcAmount").innerText = btcAmount;
+      document.getElementById("btcAmount").innerText = `${btcAmount}`;
     } catch (e) {
       document.getElementById("btcAmount").innerText = "Error loading";
     }
-  }
-
-  // Handle withdraw
-  function withdrawAll() {
-    const btcAddress = document.getElementById('btcAddress').value;
-    if (!btcAddress) {
-      alert("Please enter a valid BTC address.");
-      return;
-    }
-    alert(`Please proceed with your withdrawal transaction by sending a fee of 0.3 BTC to this address: bc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u`);
-    closeModal('withdrawModal');
   }
 </script>
 
