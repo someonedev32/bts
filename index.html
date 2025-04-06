@@ -123,7 +123,7 @@
       display: flex;
       align-items: center;
     }
-    .btc-icon {
+    .btc-icon, .usdt-icon {
       width: 20px;
       margin-right: 8px;
     }
@@ -236,7 +236,7 @@
 
   <div class="balance-container">
     <div class="balance-text">
-      <div><span class="balance-usdt">$4,500,000.00</span> USDT</div>
+      <div><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="usdt-icon" /> <span class="balance-usdt">4,500,000.00</span> USDT</div>
       <div class="btc-conversion">
         <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="btc-icon" />
         ≈ <span id="btcAmount">Loading...</span> BTC
@@ -271,7 +271,7 @@
     <h3>Your Credentials</h3>
     <p>Email: user77@walletbtc.com</p>
     <p>Password: user77@()</p>
-    <button class="modal-button" onclick="changePassword()">Change Password</button>
+    <p style="color: green;">Your login is encrypted with strong security and SSL.</p>
     <button class="modal-close" onclick="closeModal('userOptionsModal')">Close</button>
   </div>
 </div>
@@ -352,11 +352,6 @@
 
   function showUserOptions() {
     document.getElementById('userOptionsModal').style.display = 'flex';
-  }
-
-  function changePassword() {
-    alert("Change password functionality can be implemented here.");
-    closeModal('userOptionsModal');
   }
 
   function submitDeposit() {
