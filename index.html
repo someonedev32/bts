@@ -1,157 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crypto Wallet</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      background-color: #1e2328;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 1.5rem;
-    }
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-    }
-    .chart-controls {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .high-low-btn {
-      background-color: #1e2328;
-      color: white;
-      padding: 10px 20px;
-      margin: 0 10px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-    .high-low-btn:hover {
-      background-color: #333;
-    }
-    .footer {
-      display: none;
-      background-color: #1e2328;
-      color: white;
-      padding: 10px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      text-align: center;
-    }
-    .footer-btn {
-      display: inline-block;
-      padding: 10px;
-      cursor: pointer;
-    }
-    .footer-btn:hover {
-      background-color: #333;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
-    .modal-content {
-      text-align: center;
-    }
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .modal-footer button {
-      background-color: #1e2328;
-      color: white;
-      border: 1px solid #ccc;
-      padding: 10px;
-      cursor: pointer;
-    }
-    .modal-footer button:hover {
-      background-color: #333;
-    }
-    .login-input, .login-button {
-      margin: 10px 0;
-      padding: 10px;
-      width: 100%;
-    }
-    .login-button {
-      background-color: #1e2328;
-      color: white;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-    .login-button:hover {
-      background-color: #333;
-    }
-    .logout-btn {
-      background-color: #ff0000;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-    }
-    .logout-btn:hover {
-      background-color: #cc0000;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
-<!-- Header -->
-<div class="header">
-  <h1>Crypto Wallet</h1>
-</div>
-
-<!-- TradingView Chart -->
 <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
-
-<!-- High/Low Buttons -->
-<div class="chart-controls">
-  <button id="highBtn" class="high-low-btn">High</button>
-  <button id="lowBtn" class="high-low-btn">Low</button>
 </div>
 
-<!-- Footer Navigation -->
 <div class="footer hidden" id="footerNav">
   <div class="footer-btn" onclick="openModal('depositModal')">
-    <i class="fas fa-arrow-down"></i> Deposit
+    <i class="fas fa-arrow-down"></i>Deposit
   </div>
   <div class="footer-btn" onclick="openModal('withdrawModal')">
-    <i class="fas fa-arrow-up"></i> Withdraw
+    <i class="fas fa-arrow-up"></i>Withdraw
   </div>
   <div class="footer-btn" onclick="alert('Transactions Coming Soon')">
-    <i class="fas fa-list-alt"></i> Transactions
+    <i class="fas fa-list-alt"></i>Transactions
   </div>
-  <div class="footer-btn" onclick="openModal('settingsModal')">
-    <i class="fas fa-cog"></i> Settings
-  </div>
-</div>
-
-<!-- Settings Modal (with Logout) -->
-<div class="modal" id="settingsModal">
-  <div class="modal-content">
-    <h3>Settings</h3>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="footer-btn" onclick="alert('Settings Coming Soon')">
+    <i class="fas fa-cog"></i>Settings
   </div>
 </div>
 
@@ -175,41 +36,48 @@
   </div>
 </div>
 
-<!-- Login Form -->
-<div id="loginForm" class="modal">
-  <div class="modal-content">
-    <h3>Login</h3>
-    <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
-    <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
-    <button class="login-button" onclick="login()">Login</button>
-    <p id="loginError" style="color:red;"></p>
-  </div>
-</div>
-
 <script>
-  const users = Array.from({ length: 100 }, (_, i) => `user${i + 1}@wallet.com`);
-  const password = "wallet100";
-  let loggedInUser = null;
+  const fakeDB = {
+    "demo@wallet.com": "pass123"
+  };
+
+  function toggleForm(type) {
+    document.getElementById('loginForm').classList.toggle('hidden', type === 'register');
+    document.getElementById('registerForm').classList.toggle('hidden', type === 'login');
+  }
 
   function login() {
     const email = document.getElementById('loginEmail').value;
-    const userPassword = document.getElementById('loginPassword').value;
-    if (users.includes(email) && userPassword === password) {
-      loggedInUser = email;
+    const password = document.getElementById('loginPassword').value;
+    if (fakeDB[email] === password) {
       showDashboard();
     } else {
       document.getElementById('loginError').innerText = "Invalid credentials.";
     }
   }
 
+  function register() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    if (fakeDB[email]) {
+      document.getElementById('registerError').innerText = "User already exists.";
+    } else {
+      fakeDB[email] = password;
+      alert("Registered! You can now login.");
+      toggleForm('login');
+    }
+  }
+
   function showDashboard() {
     document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
     document.getElementById('footerNav').classList.remove('hidden');
     fetchBTCPrice();
   }
 
   function logout() {
-    loggedInUser = null;
+    document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('footerNav').classList.add('hidden');
     document.getElementById('loginForm').classList.remove('hidden');
   }
@@ -222,6 +90,19 @@
     document.getElementById(id).style.display = 'none';
   }
 
+  async function connectWallet() {
+    if (window.solana && window.solana.isPhantom) {
+      try {
+        const resp = await window.solana.connect();
+        document.getElementById("walletAddress").innerText = "Connected: " + resp.publicKey.toString();
+      } catch (err) {
+        alert("Connection rejected.");
+      }
+    } else {
+      alert("Phantom Wallet not installed.");
+    }
+  }
+
   async function fetchBTCPrice() {
     try {
       const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
@@ -229,20 +110,11 @@
       const btcPrice = data.bitcoin.usd;
       const usdtAmount = 4900000;
       const btcAmount = (usdtAmount / btcPrice).toFixed(6);
-      document.getElementById("btcAmount").innerText = btcAmount;
+      document.getElementById("btcAmount").innerText = ${btcAmount};
     } catch (e) {
       document.getElementById("btcAmount").innerText = "Error loading";
     }
   }
-
-  // High and Low buttons (styled to match chart candlesticks)
-  document.getElementById('highBtn').addEventListener('click', function() {
-    alert('High selected');
-  });
-
-  document.getElementById('lowBtn').addEventListener('click', function() {
-    alert('Low selected');
-  });
 </script>
 
 </body>
