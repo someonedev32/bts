@@ -15,18 +15,13 @@
       padding: 15px;
       text-align: center;
     }
-    .chart-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
     .chart-buttons {
       display: flex;
       justify-content: center;
-      margin-bottom: 10px;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
-    .chart-buttons button {
+    .high-low-btn {
       background-color: #2a2a2a;
       color: white;
       border: 1px solid #ccc;
@@ -34,25 +29,33 @@
       padding: 10px 20px;
       cursor: pointer;
     }
-    .chart-buttons button:hover {
+    .high-low-btn:hover {
       background-color: #555;
     }
-    .chart {
+    iframe {
       width: 100%;
-      height: 400px;
-      background-color: #fff;
+      height: 500px;
+      border: none;
     }
     .footer {
       display: none;
-    }
-    .footer.visible {
-      display: flex;
       justify-content: center;
       padding: 10px;
       background-color: #333;
       color: white;
     }
-    .settings-modal, .transactions-modal, .deposit-modal, .withdrawal-modal {
+    .footer.visible {
+      display: flex;
+    }
+    .footer-btn {
+      padding: 10px;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    .footer-btn:hover {
+      background-color: #555;
+    }
+    .modal {
       display: none;
       position: fixed;
       top: 50%;
@@ -63,9 +66,8 @@
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
-    .modal-header {
-      font-size: 18px;
-      margin-bottom: 15px;
+    .modal-content {
+      text-align: center;
     }
     .modal-footer {
       display: flex;
@@ -81,104 +83,153 @@
     .modal-footer button:hover {
       background-color: #555;
     }
+    .login-input, .login-button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+    }
+    .login-button {
+      background-color: #2a2a2a;
+      color: white;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .login-button:hover {
+      background-color: #555;
+    }
+    .logout-btn {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .logout-btn:hover {
+      background-color: #cc0000;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <div class="header">
     <h1>Crypto Wallet</h1>
   </div>
 
+  <!-- TradingView Chart -->
+  <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+
   <!-- High/Low Buttons -->
   <div class="chart-buttons">
-    <button id="highBtn">High</button>
-    <button id="lowBtn">Low</button>
+    <button id="highBtn" class="high-low-btn">High</button>
+    <button id="lowBtn" class="high-low-btn">Low</button>
   </div>
 
-  <!-- Chart -->
-  <div class="chart-container">
-    <div id="chart" class="chart"></div>
+  <!-- Footer Navigation -->
+  <div id="footerNav" class="footer">
+    <div class="footer-btn" onclick="openModal('depositModal')">
+      <i class="fas fa-arrow-down"></i> Deposit
+    </div>
+    <div class="footer-btn" onclick="openModal('withdrawModal')">
+      <i class="fas fa-arrow-up"></i> Withdraw
+    </div>
+    <div class="footer-btn" onclick="alert('Transactions Coming Soon')">
+      <i class="fas fa-list-alt"></i> Transactions
+    </div>
+    <div class="footer-btn" onclick="openModal('settingsModal')">
+      <i class="fas fa-cog"></i> Settings
+    </div>
   </div>
 
-  <!-- Footer -->
-  <div id="footer" class="footer">
-    <nav>Footer Navigation</nav>
-  </div>
-
-  <!-- Modals -->
-  <div id="settingsModal" class="settings-modal">
-    <div class="modal-header">
+  <!-- Settings Modal (with Logout) -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
       <h3>Settings</h3>
-    </div>
-    <div class="modal-footer">
-      <button onclick="logout()">Logout</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <div id="transactionsModal" class="transactions-modal">
-    <h3>Transactions</h3>
-    <p>No transactions yet.</p>
-    <button onclick="closeModal('transactionsModal')">Close</button>
+  <!-- Deposit Modal -->
+  <div id="depositModal" class="modal">
+    <div class="modal-content">
+      <h3>Deposit</h3>
+      <input type="number" class="login-input" placeholder="Amount" />
+      <button class="login-button">Confirm</button>
+      <button class="logout-btn" onclick="closeModal('depositModal')">Close</button>
+    </div>
   </div>
 
-  <div id="depositModal" class="deposit-modal">
-    <h3>Deposit</h3>
-    <p>Deposit request submitted.</p>
-    <button onclick="closeModal('depositModal')">Close</button>
+  <!-- Withdraw Modal -->
+  <div id="withdrawModal" class="modal">
+    <div class="modal-content">
+      <h3>Withdraw</h3>
+      <input type="number" class="login-input" placeholder="Amount" />
+      <button class="login-button">Confirm</button>
+      <button class="logout-btn" onclick="closeModal('withdrawModal')">Close</button>
+    </div>
   </div>
 
-  <div id="withdrawalModal" class="withdrawal-modal">
-    <h3>Withdrawal</h3>
-    <label for="walletAddress">Wallet Address:</label>
-    <input type="text" id="walletAddress">
-    <button onclick="submitWithdrawal()">Confirm</button>
+  <!-- Login Form -->
+  <div id="loginForm" class="modal">
+    <div class="modal-content">
+      <h3>Login</h3>
+      <input type="email" id="loginEmail" class="login-input" placeholder="Email" />
+      <input type="password" id="loginPassword" class="login-input" placeholder="Password" />
+      <button class="login-button" onclick="login()">Login</button>
+      <p id="loginError" style="color:red;"></p>
+    </div>
   </div>
 
   <script>
-    let loggedInUser = null;
     const users = Array.from({ length: 100 }, (_, i) => `user${i + 1}@wallet.com`);
     const password = "wallet100";
+    let loggedInUser = null;
 
-    function login(userEmail, userPassword) {
-      if (users.includes(userEmail) && userPassword === password) {
-        loggedInUser = userEmail;
-        showFooter(true);
-        closeModal('settingsModal');
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const userPassword = document.getElementById('loginPassword').value;
+      if (users.includes(email) && userPassword === password) {
+        loggedInUser = email;
+        showDashboard();
       } else {
-        alert('Invalid credentials');
+        document.getElementById('loginError').innerText = "Invalid credentials.";
       }
+    }
+
+    function showDashboard() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('footerNav').classList.remove('hidden');
+      fetchBTCPrice();
     }
 
     function logout() {
       loggedInUser = null;
-      showFooter(false);
+      document.getElementById('footerNav').classList.add('hidden');
+      document.getElementById('loginForm').classList.remove('hidden');
     }
 
-    function showFooter(visible) {
-      const footer = document.getElementById('footer');
-      if (visible) {
-        footer.classList.add('visible');
-      } else {
-        footer.classList.remove('visible');
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    async function fetchBTCPrice() {
+      try {
+        const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+        const data = await res.json();
+        const btcPrice = data.bitcoin.usd;
+        const usdtAmount = 4900000;
+        const btcAmount = (usdtAmount / btcPrice).toFixed(6);
+        document.getElementById("btcAmount").innerText = btcAmount;
+      } catch (e) {
+        document.getElementById("btcAmount").innerText = "Error loading";
       }
     }
 
-    function openModal(modalId) {
-      document.getElementById(modalId).style.display = 'block';
-    }
-
-    function closeModal(modalId) {
-      document.getElementById(modalId).style.display = 'none';
-    }
-
-    function submitWithdrawal() {
-      const walletAddress = document.getElementById('walletAddress').value;
-      if (walletAddress) {
-        alert(`Withdrawal to ${walletAddress} confirmed.`);
-      }
-    }
-
-    // High and Low buttons (triggering action based on chart style)
+    // High and Low buttons (styled to match chart candlesticks)
     document.getElementById('highBtn').addEventListener('click', function() {
       alert('High selected');
     });
