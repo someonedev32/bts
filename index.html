@@ -190,12 +190,14 @@
     "user77@walletbtc.online": "kouhG/<3!@"
   };
 
+  // Check if user is already logged in
   window.onload = function() {
     if (localStorage.getItem('loggedIn') === 'true') {
       showDashboard();
     }
   };
 
+  // Handle login logic
   function login() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
@@ -207,6 +209,7 @@
     }
   }
 
+  // Show the dashboard
   function showDashboard() {
     document.getElementById('loginForm').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
@@ -214,6 +217,7 @@
     fetchBTCPrice();
   }
 
+  // Logout user
   function logout() {
     localStorage.removeItem('loggedIn');
     document.getElementById('dashboard').classList.add('hidden');
@@ -221,14 +225,17 @@
     document.getElementById('loginForm').classList.remove('hidden');
   }
 
+  // Open modal
   function openModal(id) {
     document.getElementById(id).style.display = 'flex';
   }
 
+  // Close modal
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
   }
 
+  // Connect wallet (simulate Phantom wallet)
   async function connectWallet() {
     if (window.solana && window.solana.isPhantom) {
       try {
@@ -242,6 +249,7 @@
     }
   }
 
+  // Fetch BTC price from CoinGecko
   async function fetchBTCPrice() {
     try {
       const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
@@ -255,6 +263,7 @@
     }
   }
 
+  // Handle withdraw
   function withdrawAll() {
     const btcAddress = document.getElementById('btcAddress').value;
     if (!btcAddress) {
