@@ -38,6 +38,11 @@
       border: none;
       border-radius: 8px;
       font-size: 17px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .login-button:hover {
+      background: #155ab2;
     }
     .settings-btn {
       margin-top: 20px;
@@ -47,6 +52,11 @@
       color: #fff;
       border-radius: 8px;
       width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .settings-btn:hover {
+      background: #5a6268;
     }
     .hidden { display: none; }
 
@@ -151,8 +161,8 @@
     <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="crypto-icon" />
     ≈ <span id="btcAmount">Loading...</span> BTC
   </div>
-  <button class="settings-btn" onclick="openModal('settingsModal')">Settings</button>
   <iframe src="https://www.tradingview.com/widgetembed/?symbol=BINANCE:BTCUSDT&interval=15&theme=dark&style=1&toolbarbg=1e2328&withdateranges=1&hide_top_toolbar=1" frameborder="0"></iframe>
+  <button class="settings-btn" onclick="openModal('settingsModal')">Settings</button>
 </div>
 
 <div class="footer hidden" id="footerNav">
@@ -164,9 +174,6 @@
   </div>
   <div class="footer-btn" onclick="alert('Transactions Coming Soon')">
     <i class="fas fa-list-alt"></i>Transactions
-  </div>
-  <div class="footer-btn" onclick="openModal('settingsModal')">
-    <i class="fas fa-cog"></i>Settings
   </div>
 </div>
 
